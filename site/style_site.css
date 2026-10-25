@@ -48,7 +48,10 @@
 html{-webkit-text-size-adjust:100%;scroll-padding-top:136px}
 body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.6 var(--font);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;overflow-x:clip}
 html{overflow-x:clip}   /* full-bleed bands and the hero cube reach past the page; clip only at the viewport (clip keeps sticky bars working) */
-.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+:root{--wrap:1200px}
+@media screen and (min-width:1800px){:root{--wrap:1400px}}   /* wide and ultrawide monitors: the column grows with the screen */
+@media screen and (min-width:2400px){:root{--wrap:1600px}}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
 a{color:var(--ink);text-underline-offset:3px;text-decoration-thickness:1px;text-decoration-color:color-mix(in srgb,var(--ink) 35%,transparent)}
 a:hover{text-decoration-color:currentColor}
 p{margin:0 0 14px;color:var(--ink-2)}
@@ -148,14 +151,14 @@ a.back:hover{color:var(--ink)}
 /* home hero: the brand line, the claim, then the media in a framed panel */
 /* home hero: brand line and claim across the full width; the promise, the way in and the video side by side below */
 /* ---- home: five screens. 1 the hero (copy, the logo cube, production figures) */
-header.hero-home{min-height:calc(100svh - 72px);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);column-gap:48px;align-items:center;padding:24px 0 48px}
+header.hero-home{min-height:min(calc(100svh - 72px),1000px);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);column-gap:48px;align-items:center;padding:24px 0 48px}
 .hh-copy{grid-column:1;grid-row:1}
 header.hero-home h1{font-size:clamp(44px,5.4vw,80px);line-height:.98;max-width:15ch;margin:0 0 28px;text-wrap:balance}
 .hh-sub{font-size:clamp(17px,1.45vw,19px);line-height:1.55;color:var(--ink-2);max-width:46ch;margin:0 0 32px}
 .hh-visual{grid-column:2;grid-row:1;position:relative;width:100%;aspect-ratio:1/1}
 /* the canvas reaches over the gap on the left and out to the window's edge on the right, so pieces that fly out
    are never cut inside the page */
-.hh-visual canvas{position:absolute;top:-14%;left:-22%;width:calc(122% + max(0px, (100vw - 1200px) / 2) + 24px);height:128%;display:block;touch-action:pan-y}   /* a canvas does not stretch between left and right: its size is set */
+.hh-visual canvas{position:absolute;top:-14%;left:-22%;width:calc(122% + max(0px, (100vw - var(--wrap)) / 2) + 24px);height:128%;display:block;touch-action:pan-y}   /* a canvas does not stretch between left and right: its size is set */
 .hero-caption{position:absolute;left:0;right:0;bottom:3%;z-index:1;margin:0;display:flex;justify-content:center;align-items:baseline;gap:12px;font:500 14px var(--font);color:var(--ink-2);opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s var(--ease-out);pointer-events:none}
 .hero-caption.on{opacity:1;transform:none}
 .hero-caption .hc-n{font:500 12px var(--mono);color:var(--ink-3)}
@@ -202,9 +205,9 @@ header.hero{isolation:isolate}
 .sys{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:48px;align-items:start}
 .sys-head{grid-column:1;grid-row:1}
 .sys-steps{grid-column:1;grid-row:2;list-style:none;margin:0;padding:0;counter-reset:st}
-.sys-visual{grid-column:2;grid-row:1 / 3;position:sticky;top:72px;height:calc(100svh - 72px);min-height:480px}
+.sys-visual{grid-column:2;grid-row:1 / 3;position:sticky;top:72px;height:min(calc(100svh - 72px),980px);min-height:480px}
 .sys-visual canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.sys-steps li{counter-increment:st;position:relative;min-height:36svh;display:flex;flex-direction:column;justify-content:center;padding:0 0 0 56px;color:var(--ink-3);cursor:pointer;outline-offset:6px;transition:color .35s}
+.sys-steps li{counter-increment:st;position:relative;min-height:min(36svh,380px);display:flex;flex-direction:column;justify-content:center;padding:0 0 0 56px;color:var(--ink-3);cursor:pointer;outline-offset:6px;transition:color .35s}
 .sys-steps li::before{content:counter(st,decimal-leading-zero);position:absolute;left:0;top:50%;width:32px;height:32px;margin-top:-16px;display:grid;place-items:center;border:1px solid var(--rule-2);border-radius:8px;font:500 12px var(--mono);color:var(--ink-3);background:var(--bg);transition:color .35s,border-color .35s,background .35s}
 .sys-steps li::after{content:"";position:absolute;left:16px;top:0;bottom:0;width:1px;background:var(--rule);z-index:-1}
 .sys-steps li:first-child::after{top:50%}
@@ -289,7 +292,7 @@ main section{position:relative;padding:80px 0;border-top:1px solid var(--rule)}
 .bluf.warn p{color:var(--ink)}
 .fine{font:13px/1.55 var(--font);color:var(--ink-3);margin-top:14px}
 .fine a{color:var(--ink-2)}
-.why{font-size:15px;margin:24px 0 0;padding:16px 18px;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);color:var(--ink-2)}
+.why{max-width:72ch;margin:28px 0 0;padding:2px 0 2px 18px;border-left:2px solid var(--ink);font-size:16px;line-height:1.6;color:var(--ink-2)}   /* a closing statement: a ruled line, not a box */
 .why b{color:var(--ink)}
 .ask{position:relative;background:var(--surface);border:1px solid var(--rule-2);border-radius:var(--r);padding:28px 30px}
 .ask::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:2px;background:var(--ink)}
@@ -318,8 +321,8 @@ main section{position:relative;padding:80px 0;border-top:1px solid var(--rule)}
 .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));border-radius:var(--r);overflow:hidden}
 /* ruled grids: each cell draws its own lines (a hairline on every side, overlapping its neighbours'),
    so a short last row just ends; there is never an empty grey cell */
-.stats,.steps,.pillars,.sectors,.ex-panels{padding:1px 0 0 1px}
-.stats > *,.steps > *,.pillars > *,.sectors > *,.ex-panels > *{box-shadow:0 0 0 1px var(--rule);margin:0 0 1px 0}
+.stats,.steps,.pillars,.sectors{padding:1px 0 0 1px}
+.stats > *,.steps > *,.pillars > *,.sectors > *{box-shadow:0 0 0 1px var(--rule);margin:0 0 1px 0}
 .pillars:has(> :nth-child(6):last-child){grid-template-columns:repeat(3,1fr)}
 .pillars.three{grid-template-columns:repeat(3,1fr)}
 .pillars.five{grid-template-columns:repeat(5,1fr)}
@@ -508,13 +511,13 @@ section.has-story .diagram{background-color:var(--bg)}
 .story-stage .diagram{margin:0}
 .story-stage .anim-bar{display:none}
 .story-stage .anim-prog{margin-top:0}
-.steps.story-steps{grid-column:1;grid-row:1;display:block;background:none;border:0;border-radius:0;overflow:visible;padding:4vh 0 22vh}
-.steps.story-steps > *,.explorer.ready .ex-panels > *{box-shadow:none;margin:0}
-.steps.story-steps li{position:relative;display:block;padding:10vh 0 10vh 48px;background:none;font-size:18px;line-height:1.55;color:var(--ink-3);cursor:pointer;transition:color .4s}
+.steps.story-steps{grid-column:1;grid-row:1;display:block;background:none;border:0;border-radius:0;overflow:visible;padding:min(4vh,40px) 0 min(22vh,220px)}
+.steps.story-steps > *{box-shadow:none;margin:0}
+.steps.story-steps li{position:relative;display:block;padding:min(10vh,96px) 0 min(10vh,96px) 48px;background:none;font-size:18px;line-height:1.55;color:var(--ink-3);cursor:pointer;transition:color .4s}
 .steps.story-steps li b{color:var(--ink-2);transition:color .4s}
-.steps.story-steps li .n{top:calc(10vh + 2px);width:24px;height:24px;line-height:22px;transition:background .4s,color .4s,border-color .4s}
+.steps.story-steps li .n{top:calc(min(10vh,96px) + 2px);width:24px;height:24px;line-height:22px;transition:background .4s,color .4s,border-color .4s}
 .steps.story-steps li::before{content:"";position:absolute;left:11px;top:0;bottom:0;width:1px;background:var(--rule)}
-.steps.story-steps li:first-child::before{top:10vh} .steps.story-steps li:last-child::before{bottom:calc(100% - 10vh - 14px)}
+.steps.story-steps li:first-child::before{top:min(10vh,96px)} .steps.story-steps li:last-child::before{bottom:calc(100% - min(10vh,96px) - 14px)}
 .steps.story-steps li .n{z-index:1;background:var(--surface)}
 .steps.story-steps li.active{color:var(--ink);background:none}
 .steps.story-steps li.active b{color:var(--ink)}
@@ -728,72 +731,6 @@ table.comp.wc-tbl{min-width:0}
 .risk-zero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:end;margin-top:28px}
 .risk-zero .stats{margin:0}
 
-/* ---- home: use-case explorer. Without scripts the five results show as a grid of cards;
-   _site.js adds the industry tabs and .ready, and shows one result at a time. */
-.ex-tabs{display:none}
-.ex-panels{display:grid;grid-template-columns:repeat(5,1fr);border-radius:var(--r);overflow:hidden}
-.ex-panels .go{display:none}
-.explorer.ready{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.6fr);border:1px solid var(--rule);border-radius:var(--r);background:var(--surface);overflow:hidden}
-.explorer.ready .ex-tabs{display:flex;flex-direction:column;border-right:1px solid var(--rule)}
-.ex-tabs button{position:relative;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;font:600 15.5px var(--font);color:var(--ink-2);background:transparent;border:0;border-top:1px solid var(--rule);padding:0 22px;min-height:68px;flex:1;cursor:pointer;transition:color .2s,background .2s}
-.ex-tabs button:first-child{border-top:0}
-.ex-tabs button span{font:500 11px var(--mono);color:var(--ink-3)}
-.ex-tabs button:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 3%,transparent)}
-.ex-tabs button[aria-selected="true"]{color:var(--ink);background:var(--surface-2)}
-.ex-tabs button[aria-selected="true"]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--ink)}
-.ex-tabs button i{position:absolute;left:0;bottom:0;height:1px;width:calc(var(--t,0)*100%);background:var(--ink-3)}
-.explorer.ready .ex-panels{display:block;position:relative;min-height:380px;background:transparent;border:0;border-radius:0;overflow:hidden}
-.explorer.ready .ex-panels > .pillar{position:absolute;inset:0;z-index:1;padding:44px 48px;display:flex;flex-direction:column;justify-content:flex-end;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .5s var(--ease-out),transform .5s var(--ease-out),visibility 0s .5s;background:transparent}
-.explorer.ready .ex-panels > .pillar.on{opacity:1;visibility:visible;transform:none;transition:opacity .5s var(--ease-out),transform .5s var(--ease-out)}
-.explorer.ready .ex-panels > .pillar::after{display:none}
-.explorer.ready .ex-panels > .pillar > h3{font-size:clamp(30px,3.6vw,48px);line-height:1;font-stretch:85%;font-weight:650;letter-spacing:-.018em;max-width:17ch;margin:0 0 14px}
-.explorer.ready .ex-panels > .pillar > p{font-size:17px;max-width:42ch;margin-bottom:0}
-.explorer.ready .ex-panels .go{display:inline-block;margin-top:24px;font:600 15px var(--font);color:var(--ink-2);transition:color .2s}
-.explorer.ready .ex-panels > .pillar:hover .go{color:var(--ink)}
-.ex-panels canvas{display:none}
-/* rich explorer (class "explorer rich"): panels with lists, tables or diagrams. Tabs across the top, panels in the
-   page's flow (nothing is clipped), and no automatic advance; on phones it is the same accordion */
-.explorer.ready.rich{display:block;grid-template-columns:none}
-.explorer.ready.rich .ex-tabs{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--rule)}
-.explorer.ready.rich .ex-tabs button{flex:none;min-height:56px;border-top:0;border-left:1px solid var(--rule);padding:0 22px}
-.explorer.ready.rich .ex-tabs button:first-child{border-left:0}
-.explorer.ready.rich .ex-tabs button span,.explorer.ready.rich .ex-tabs button i{display:none}
-.explorer.ready.rich .ex-tabs button[aria-selected="true"]::before{left:0;right:0;top:auto;bottom:-1px;width:auto;height:2px;background:var(--ink)}
-.explorer.ready.rich .ex-panels{min-height:0}
-.explorer.ready.rich .ex-panels > .pillar{position:static;inset:auto;display:block;padding:32px 32px 34px;opacity:1;visibility:visible;transform:none;transition:none}
-.explorer.ready.rich .ex-panels > .pillar:not(.on){display:none}
-.explorer.ready.rich .ex-panels > .pillar > h3{font-size:clamp(22px,2.2vw,28px);max-width:none}
-.explorer.ready.rich .ex-panels > .pillar > p{font-size:16px;max-width:72ch}
-.explorer.rich .ex-panels > .pillar .diagram{margin:20px 0 4px}
-.explorer.rich .ex-panels{grid-template-columns:1fr}
-.explorer.ready.rich .ex-panels > .pillar > p{margin:0 0 14px}
-.explorer.ready.rich .ex-panels > .pillar > p.intro{margin-bottom:24px}
-.explorer.ready.rich .ex-panels > .pillar > p.why{margin-top:24px}
-.explorer.ready.rich .ex-panels > .pillar > p.fine,.explorer.ready.rich .ex-panels > .pillar > p.xref{font-size:13px;margin-top:16px}
-/* phones: the explorer as an accordion */
-.explorer:not(.acc) .acc-h{display:none}
-.explorer.acc .ex-tabs{display:none}
-.explorer.acc .ex-panels{display:block;border:1px solid var(--rule);border-radius:14px;background:var(--surface);padding:0;overflow:hidden}
-.explorer.acc .ex-panels > *{box-shadow:none;margin:0}
-.acc-h{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:18px 18px;border:0;border-top:1px solid var(--rule);background:none;color:var(--ink);font:600 16px/1.3 var(--font);cursor:pointer}
-.acc-h:first-child{border-top:0}
-.acc-h svg{flex:none;width:14px;height:14px;color:var(--ink-3);transition:transform .25s var(--ease-out)}
-.acc-h[aria-expanded="true"] svg{transform:rotate(180deg)}
-.explorer.acc .ex-panels > .pillar{display:none;padding:0 18px 20px;background:none}
-.explorer.acc .ex-panels > .pillar.open{display:block}
-.explorer.acc .ex-panels > .pillar > h3,.explorer.acc .ex-panels > .pillar > .tag,.explorer.acc .ex-panels > .pillar > .ico{display:none}
-.explorer.acc .ex-panels > .pillar > p{font-size:15.5px;margin-bottom:12px}
-.explorer.acc .ex-panels > .pillar .go{display:inline-block;font-weight:600;font-size:14.5px;color:var(--ink)}
-/* benefits: the same explorer, each panel the benefit's icon, title, text and its link into How It Works */
-.ex-benefits .ex-panels{grid-template-columns:repeat(3,1fr)}
-.explorer.ready.ex-benefits .ex-panels{min-height:340px}
-.explorer.ready.ex-benefits .ex-panels > .pillar{justify-content:flex-start;padding-top:40px}
-.explorer.ready.ex-benefits .ex-panels > .pillar .ico{width:48px;height:48px;border-radius:12px;margin-bottom:28px}
-.explorer.ready.ex-benefits .ex-panels > .pillar .ico svg{width:22px;height:22px}
-.explorer.ready.ex-benefits .ex-panels > .pillar > h3{font-size:clamp(26px,2.8vw,36px)}
-.explorer.ready.ex-benefits .ex-panels > .pillar > p{font-size:17px;max-width:48ch;margin-bottom:22px}
-.explorer.ready.ex-benefits .ex-panels > .pillar .more{font-size:15px;font-weight:600;color:var(--ink)}
-.explorer.ready .ex-panels canvas{display:block;position:absolute;right:0;top:0;width:58%;height:100%;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.25) 35%,#000 75%);mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.25) 35%,#000 75%)}
 
 /* ---- scroll reveal (after Magic UI's Blur Fade): set up by _site.js only when it will run */
 .js .rv{opacity:0;transform:translateY(14px);filter:blur(6px);transition:opacity .8s var(--ease-out),transform .8s var(--ease-out),filter .8s var(--ease-out);transition-delay:calc(var(--i,0)*70ms)}
@@ -1009,7 +946,7 @@ section.closing{border-top:0;padding-top:16px}
 
 @media screen and (max-width:1060px){
   .foot-top{grid-template-columns:1fr;gap:56px}
-  .pillars.five,.ex-panels{grid-template-columns:repeat(3,1fr)}
+  .pillars.five{grid-template-columns:repeat(3,1fr)}
   .decision{grid-template-columns:1fr;gap:36px}
   .approaches{position:static;grid-template-columns:1fr 1fr}
   .risk-grid{grid-template-columns:1fr;gap:32px}
@@ -1104,28 +1041,17 @@ section.closing{border-top:0;padding-top:16px}
   .cat-list a .ico{width:24px;height:24px}
   .cat-head{grid-template-columns:auto minmax(0,1fr)}
   .cat-all{grid-column:2}
-  .ex-panels{grid-template-columns:1fr}
-  .explorer.ready{grid-template-columns:1fr}
-  .explorer.ready .ex-tabs{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--rule);scrollbar-width:none}
-  .ex-tabs button{border-top:0;border-left:1px solid var(--rule);padding:0 16px;min-height:52px;flex:none;white-space:nowrap;font-size:14px}
-  .ex-tabs button:first-child{border-left:0}
-  .ex-tabs button span{display:none}
-  .ex-tabs button[aria-selected="true"]::before{left:0;right:0;top:auto;bottom:0;width:auto;height:2px;background:var(--spectrum)}
-  .explorer.ready .ex-panels{min-height:330px}
-  .explorer.ready .ex-panels > .pillar{padding:28px 22px}
-  .explorer.ready .ex-panels canvas{width:100%;opacity:.45}
   .risk-zero{grid-template-columns:1fr}
   nav.toc a{padding-right:12px;margin-right:12px}
 }
 
 /* ---- print: drop the site chrome and the moving parts of the diagrams */
 @media print{
-  .explorer.ready.rich .ex-panels > .pillar:not(.on){display:block}
   :root{--bg:#fff;--surface:#fff;--surface-2:#f3f4f5;--surface-3:#eceef0;--ink:#0b0e12;--ink-2:#3c424a;--ink-3:#6f757d;--rule:#d5d9de;--rule-2:#bfc5cc;
     --accent:#2457d6;--accent-soft:#e7eefc;--good:#0b8a5c;--good-soft:#e1f4ec;--mid:#9a5a00;--mid-soft:#f8eddb;--bad:#c42e50;--bad-soft:#fbe6eb;--band:#fff;--band-ink:#0b0e12;
     --logo-light:inline-block;--logo-dark:none;--grid-line:transparent}
   body{font-size:13px}
-  .site-nav,.nav-drawer,.site-foot,nav.toc.local,.cta .btn-row,nav.toc,.anim-bar,.anim-prog,.skip,.back,header.hero .btn-row,.ripple,.ex-panels canvas{display:none!important}
+  .site-nav,.nav-drawer,.site-foot,nav.toc.local,.cta .btn-row,nav.toc,.anim-bar,.anim-prog,.skip,.back,header.hero .btn-row,.ripple{display:none!important}
   .cta::after{display:none}
   .legal ~ .cta{display:none}
   .blank{background:none}
@@ -1134,11 +1060,6 @@ section.closing{border-top:0;padding-top:16px}
   .rv{opacity:1!important;transform:none!important;filter:none!important}
 
   .approaches{position:static}
-  .explorer.ready{display:block;border:0}
-  .explorer.ready .ex-tabs,.ex-panels .go{display:none}
-  .explorer.ready .ex-panels{min-height:0}
-  .explorer.ready .ex-panels > .pillar{position:static;opacity:1;visibility:visible;transform:none;padding:10px 0;border-top:1px solid var(--rule)}
-  .explorer.ready .ex-panels > .pillar > h3{font-size:18px}
   .stat,.pillar,.path li,.steps li,.cols li,.poc-list li,.why,.xref,.diagram,tr,.bluf p,.sol,.risks li,.vs > div,.appr{break-inside:avoid}
   h2,h3,h4,.sec-num,.sec-idx,.intro{break-after:avoid}
   #bubble,#converge,[id^="tok-"],.d-inst-prog,#tok2,#pipe-tok,#poc-cur,.d-trail{display:none!important}
@@ -1544,7 +1465,7 @@ main section[tabindex="-1"]:focus{outline:none}
    QA SWEEP FIXES (2026-10-25)
    ====================================================================== */
 /* grids never end on an empty cell */
-.stats,.steps,.pillars,.sectors,.ex-panels{padding:1px 1px 0 1px}            /* the right-hand hairline is no longer clipped */
+.stats,.steps,.pillars,.sectors{padding:1px 1px 0 1px}            /* the right-hand hairline is no longer clipped */
 @media screen and (min-width:761px){ .steps:has(> li:nth-child(5):last-child) > li:last-child{grid-column:span 2} }   /* phones have one column: spanning two would force a second and push steps off the screen */
 .cat-grid > :last-child:nth-child(odd){grid-column:1 / -1}
 @media screen and (min-width:761px) and (max-width:1060px){
@@ -1553,7 +1474,6 @@ main section[tabindex="-1"]:focus{outline:none}
   .stats.five > .stat:nth-child(n+4){grid-column:span 3}
   .pillars:has(> :nth-child(4):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}
   .pillars:has(> :nth-child(3):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
-  .explorer.ready.rich .ex-tabs button{flex:1 1 auto;justify-content:center}
 }
 /* no colour gradients or glows in the interface */
 .js .path.has-beam::after{background:var(--ink-3);box-shadow:none}
@@ -1592,3 +1512,40 @@ h3,h4,.sys-steps b,.apps b,.ind b,.trio h3,.cat-card h4,.stage + h3{text-wrap:ba
   .stats,.stats.five,.stats.three{grid-template-columns:minmax(0,1fr)}
   .stats .stat,.stats.five .stat:last-child{grid-template-columns:minmax(0,1fr);row-gap:6px}
 }
+
+/* ---- Topics: a chapter's sub-sections laid open, in place of tabs (Why Fractal, Benchmarks, Collaborate).
+   Wide screens set each topic's heading in a left column that stays in view while its text is read, the text
+   on the right, a hairline between topics; a topic with a diagram runs full width. Phones stack heading and
+   text. Points are ruled rows (label, then text), not cards; the closing statement is a ruled line, not a box. */
+.topic{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:clamp(32px,5vw,72px);padding:40px 0 44px;border-top:1px solid var(--rule)}
+.topic:first-child{border-top:0;padding-top:8px}
+.topic > h3{position:sticky;top:144px;align-self:start;margin:0;font:650 clamp(22px,2vw,28px)/1.15 var(--font);font-stretch:88%;letter-spacing:-.012em;color:var(--ink);text-wrap:balance}
+.topic-body{min-width:0}
+.topic-body > p{font-size:17px;line-height:1.6;color:var(--ink-2);max-width:64ch;margin:0 0 14px}
+.topic-body > p.intro{font-size:18px;color:var(--ink);margin-bottom:22px}
+.topic-body > :last-child{margin-bottom:0}
+.topic.wide{display:block}
+.topic.wide > h3{position:static;margin-bottom:16px;max-width:none}
+.topic .why{max-width:64ch;font-size:16.5px}
+.topic .bluf.warn{padding:0;background:none;border:0;border-radius:0}
+.topic .bluf.warn p{font-size:18px;line-height:1.6}
+.topic .risks{border:0;border-radius:0;background:none;border-top:1px solid var(--rule)}
+.topic .risks li:first-child{border-top:0}
+.points{list-style:none;margin:4px 0 0;padding:0;border-top:1px solid var(--rule)}
+.points li{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,5fr);column-gap:28px;padding:18px 0 19px;border-bottom:1px solid var(--rule)}
+.points b{font:650 17px/1.3 var(--font);font-stretch:90%;color:var(--ink)}
+.points span{font-size:15.5px;line-height:1.55;color:var(--ink-2)}
+@media screen and (max-width:860px){
+  .topic{grid-template-columns:minmax(0,1fr);row-gap:14px;padding:30px 0 32px}
+  .topic > h3{position:static}
+}
+@media screen and (max-width:560px){
+  .points li{grid-template-columns:minmax(0,1fr);row-gap:4px}
+}
+h2 + .topics,p.intro + .topics{margin-top:28px}
+.part > .points{margin-top:18px}
+.topic-body > ul:not(.points){margin:0;padding-left:18px;font-size:16.5px;line-height:1.6;color:var(--ink-2);max-width:64ch}
+.topic-body > ul:not(.points) li{margin:0 0 10px}
+.topic-body > ul:not(.points) li::marker{color:var(--ink-3)}
+@media screen and (min-width:761px){ .topic .steps{grid-template-columns:repeat(2,minmax(0,1fr))} }   /* full-width topics: two columns, so five and six steps fill their rows */
+.steps + .why,.poc-list + .why{margin-top:28px}

@@ -10,8 +10,7 @@
    the page: blocks fade in as they scroll into view, stat figures count up, cards light up
    under the pointer, the migration path draws a beam through its stages, the comparison
    table draws bars for its exact figures, the home page's risk section plays one bad
-   write against source systems and against the twin, and its results become an industry
-   explorer. Readers who ask for reduced motion get every one of these in its final state. */
+   write against source systems and against the twin. Readers who ask for reduced motion get every one of these in its final state. */
 (function(){
   var root = document.documentElement;
 
@@ -247,7 +246,7 @@
       tio.observe(tl);
     });
 
-    catalog(); arrows(); revealWords(); changes(); faceoff(); race(); solSheets(); localNav(); reveal(); counters(); spotlight(); pathBeam(); magnitude(); ripples(); tableLabels(); heroGrid(); explorer(); footField(); voxelHero(); voxelSystem();
+    catalog(); arrows(); revealWords(); changes(); faceoff(); race(); solSheets(); localNav(); reveal(); counters(); spotlight(); pathBeam(); magnitude(); ripples(); tableLabels(); heroGrid(); footField(); voxelHero(); voxelSystem();
   });
 
   /* The arrow that ends many link and button labels ("Schedule a call →") goes into its
@@ -493,7 +492,7 @@
     var sel = ['header.hero .hero-copy > *', '.proof > *', 'header.hero > h1', 'header.hero > .lede', 'header.hero > p', '.media-frame', 'header.hero > nav.toc',
                'main section > .sec-idx', 'main section > h2', 'main section > .intro', 'main section > .bluf', 'main section > .stats', 'main section > .fine',
                'main section > .xref', 'main section > .why', 'main section > .tbl-wrap', 'main section > .diagram', 'main section > .steps', 'main section > .cols',
-               'main section > .risks', 'main section > .vs > *', 'main section > .ask', 'main section > .explorer', 'main section > .links',
+               'main section > .risks', 'main section > .vs > *', 'main section > .ask', 'main section > .links',
                '.decision > .bluf', '.approaches > *', '.ripple > *', '.risk-zero', '.pillars > *', '.path > li', '.sectors > *', '.sol', '.cta'].join(',');
     var els = Array.prototype.slice.call(document.querySelectorAll(sel));
     var groups = new Map();
@@ -1025,10 +1024,6 @@
     (function frame (now) { if (vis) draw(now); requestAnimationFrame(frame) })(performance.now());
   }
 
-  /* Home page, results: the five industry results become an explorer, one result at a
-     time beside a list of industries, advancing on its own until the reader takes over
-     (after the tab pattern on Linear and Vercel's sites, with Magic UI's Flickering Grid
-     behind each result in the logo's colours). */
   /* Behind each inner page's header: a hairline grid of square cells, fading out away from the upper right, with a few cells lit faintly in the logo's
      colours, each slowly brightening and fading. Still for readers who ask for reduced motion; it waits
      while the header is off screen. */
@@ -1112,115 +1107,5 @@
       set(at, true);
       if (q.matches) { at.scrollIntoView({block: 'start'}); window.addEventListener('load', function(){ at.scrollIntoView({block: 'start'}) }) }
     }
-  }
-
-  /* Each explorer is built both ways once, tabs and accordion, and shows the one that fits the window:
-     the accordion on phones, the tabs wider (switching as the window crosses the phone width). */
-  function explorer () {
-    var q = window.matchMedia('(max-width: 760px)'), all = document.querySelectorAll('[data-explorer]');
-    all.forEach(function(ex){ explorerOne(ex); accordion(ex) });
-    function fit () { all.forEach(function(ex){ ex.classList.toggle('acc', q.matches); ex.classList.toggle('ready', !q.matches) }) }
-    fit();
-    if (q.addEventListener) q.addEventListener('change', fit);
-  }
-  /* On phones an explorer is an accordion: the titles in a column, one open at a time. */
-  function accordion (ex) {
-    var panels = Array.prototype.slice.call(ex.querySelectorAll('.ex-panels > .pillar'));
-    ex.classList.add('acc');
-    var heads = panels.map(function(p, i){
-      var label = p.querySelector(':scope > .tag') || p.querySelector(':scope > h3'), b = document.createElement('button');
-      b.type = 'button'; b.className = 'acc-h'; b.setAttribute('aria-expanded', 'false'); if (!p.id) p.id = 'acc-' + Math.random().toString(36).slice(2, 8);
-      b.setAttribute('aria-controls', p.id);
-      b.innerHTML = '<span></span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg>';
-      b.firstChild.textContent = label.textContent;
-      p.parentNode.insertBefore(b, p);
-      b.addEventListener('click', function(){ open(heads[i] === cur ? -1 : i) });
-      return b;
-    });
-    var cur = null;
-    function open (k) {
-      cur = k >= 0 ? heads[k] : null;
-      panels.forEach(function(p, i){ p.classList.toggle('open', i === k); heads[i].setAttribute('aria-expanded', i === k ? 'true' : 'false') });
-    }
-    var at = panels.map(function(p){ return '#' + p.id }).indexOf(location.hash);
-    open(at >= 0 ? at : 0);
-    window.addEventListener('hashchange', function(){                     // an in-page link to a closed panel opens it
-      var k = panels.map(function(p){ return '#' + p.id }).indexOf(location.hash);
-      if (k >= 0) { open(k); heads[k].scrollIntoView({block: 'start'}) }
-    });
-  }
-  function explorerOne (ex) {
-    var tabs = ex.querySelector('.ex-tabs'), panels = Array.prototype.slice.call(ex.querySelectorAll('.ex-panels > .pillar'));
-    var cv = ex.querySelector('.ex-panels canvas'), cur = 0, D = 6000, t0 = null, paused = false, vis = false, userTook = false;
-    var btns = panels.map(function(p, i){
-      var b = document.createElement('button'), num = document.createElement('span'), bar = document.createElement('i');
-      var id = 'ex-tab-' + i, pid = 'ex-panel-' + i;
-      b.type = 'button'; b.id = id; b.setAttribute('role', 'tab'); b.setAttribute('aria-controls', pid);
-      var label = p.querySelector(':scope > .tag') || p.querySelector(':scope > h3');                 // results are named by industry, benefits by their title
-      b.textContent = label.textContent;
-      num.textContent = String(i + 1).padStart(2, '0'); b.appendChild(num); b.appendChild(bar);
-      if (!p.id) p.id = pid; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', id); b.setAttribute('aria-controls', p.id);
-      b.addEventListener('click', function(){ userTook = true; show(i) });
-      b.addEventListener('keydown', function(e){
-        var d = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : (e.key === 'ArrowUp' || e.key === 'ArrowLeft') ? -1 : 0;
-        if (d) { e.preventDefault(); userTook = true; show((cur + d + panels.length) % panels.length); btns[cur].b.focus() }
-      });
-      tabs.appendChild(b);
-      return {b: b, bar: bar};
-    });
-    function show (i) {
-      cur = i; t0 = null;
-      panels.forEach(function(p, k){ p.classList.toggle('on', k === i); p.tabIndex = k === i ? 0 : -1; p.setAttribute('aria-hidden', k === i ? 'false' : 'true') });
-      btns.forEach(function(o, k){ o.b.setAttribute('aria-selected', k === i ? 'true' : 'false'); o.b.tabIndex = k === i ? 0 : -1; o.bar.style.setProperty('--t', 0) });
-    }
-    ex.classList.add('ready');
-    if (ex.classList.contains('rich')) userTook = true;               // rich panels are read, not skimmed: no automatic advance
-    var at = panels.map(function(p){ return '#' + p.id }).indexOf(location.hash);   // a link to one benefit (eg. /#b-safe) opens it
-    show(at >= 0 ? at : 0); if (at >= 0) userTook = true;
-    window.addEventListener('hashchange', function(){ var k = panels.map(function(p){ return '#' + p.id }).indexOf(location.hash); if (k >= 0) { userTook = true; show(k) } });
-    ex.addEventListener('pointerenter', function(){ paused = true });
-    ex.addEventListener('pointerleave', function(){ paused = false });
-    ex.addEventListener('focusin', function(){ paused = true });
-    ex.addEventListener('focusout', function(){ paused = false });
-    onView(ex, function(on){ vis = on });
-
-    // flickering grid
-    var ctx = cv && cv.getContext('2d'), w = 0, h = 0, cells = [], S = 4, G = 6, pal = [];
-    function palette () { pal = ['--sp-1', '--sp-2', '--sp-3', '--sp-4', '--sp-5'].map(css) }
-    function size () {
-      if (!ctx) return;
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = cv.clientWidth; h = cv.clientHeight; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cells = [];
-      for (var y = 0; y < h; y += S + G) for (var x = 0; x < w; x += S + G) cells.push({x: x, y: y, a: Math.random() * .3, c: Math.random()});
-    }
-    function grid (dt) {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, w, h);
-      cells.forEach(function(c){
-        if (!reduce && Math.random() < .045 * dt / 16) c.a = Math.random() * .55;
-        var hue = Math.floor((c.c * 2.2 + cur * .8 + c.x / w * 1.8)) % 5;            // each industry shifts the band of colours
-        ctx.globalAlpha = c.a; ctx.fillStyle = pal[hue]; ctx.fillRect(c.x, c.y, S, S);
-      });
-      ctx.globalAlpha = 1;
-    }
-    palette(); size(); grid(16);
-    document.addEventListener('themechange', function(){ palette(); grid(16) });
-    if (window.ResizeObserver && cv) new ResizeObserver(function(){ size(); grid(16) }).observe(cv);
-    if (reduce) return;
-    var last = null;
-    (function frame (now) {
-      var dt = last === null ? 16 : Math.min(64, now - last); last = now;
-      if (vis) {
-        if (!paused && !userTook) {
-          if (t0 === null) t0 = now - 0;
-          var k = (now - t0) / D;
-          btns[cur].bar.style.setProperty('--t', Math.min(1, k).toFixed(3));
-          if (k >= 1) show((cur + 1) % panels.length);
-        } else if (t0 !== null && paused) { t0 += dt }                      // hold the timer while the reader is on it
-        grid(dt);
-      }
-      requestAnimationFrame(frame);
-    })(performance.now());
   }
 })();
