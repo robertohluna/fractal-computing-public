@@ -305,7 +305,7 @@ main section{position:relative;padding:80px 0;border-top:1px solid var(--rule)}
 .xref a:hover{border-color:var(--ink-3);background:color-mix(in srgb,var(--ink) 4%,transparent)}
 
 /* ---- stats: one ruled strip, numbers in ink, a spectrum tick per stat */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:40px 0 6px;border-radius:var(--r);overflow:hidden}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));margin:40px 0 6px;border-radius:var(--r);overflow:hidden}
 .stats.five{grid-template-columns:repeat(5,1fr)}
 .stats.three{grid-template-columns:repeat(3,1fr)}
 .stat{position:relative;padding:22px 20px 20px;background:var(--surface)}
@@ -315,7 +315,7 @@ main section{position:relative;padding:80px 0;border-top:1px solid var(--rule)}
 .stats:has(> .stat:only-child){display:inline-grid;grid-template-columns:auto;min-width:280px}
 
 /* ---- cards */
-.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border-radius:var(--r);overflow:hidden}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));border-radius:var(--r);overflow:hidden}
 /* ruled grids: each cell draws its own lines (a hairline on every side, overlapping its neighbours'),
    so a short last row just ends; there is never an empty grey cell */
 .stats,.steps,.pillars,.sectors,.ex-panels{padding:1px 0 0 1px}
@@ -436,7 +436,7 @@ td.src .mag i{background:var(--ink-3)} td:last-child .mag i{background:var(--ink
 .d-num-t{fill:var(--bg);font:600 11.5px var(--mono)}
 .d-person{fill:var(--ink-3)}
 .d-brace{stroke:var(--ink-3);stroke-width:1;fill:none}
-.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));border-radius:var(--r);overflow:hidden}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));border-radius:var(--r);overflow:hidden}
 .steps li{background:var(--surface);padding:16px 18px 16px 54px;position:relative;font-size:14.5px;color:var(--ink-2)}
 .steps li b{color:var(--ink);font-weight:500}
 .steps .n{position:absolute;left:18px;top:16px;width:22px;height:22px;border-radius:50%;border:1px solid var(--rule-2);color:var(--ink-2);font:600 11px/20px var(--font);text-align:center}
@@ -826,7 +826,7 @@ main section.cat-group{scroll-margin-top:96px;padding:0;border-top:0}
 .cat-head p{margin:0;font-size:14.5px;max-width:60ch}
 .cat-all{font-size:14px;font-weight:500;color:var(--ink-2);text-decoration:none;white-space:nowrap;padding-top:4px}
 .cat-all:hover{color:var(--ink)}
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:12px}
 .cat-card{position:relative;display:flex;flex-direction:column;gap:12px;padding:20px 20px 18px;border:1px solid var(--rule);border-radius:14px;background:var(--surface);color:inherit;text-decoration:none;transition:border-color .2s,transform .2s var(--ease-out),box-shadow .2s}
 .cat-card:hover{border-color:var(--rule-2);transform:translateY(-2px);box-shadow:0 16px 36px -20px rgba(0,0,0,.5)}
 .cat-card::after{content:"→";position:absolute;right:18px;top:18px;font-size:15px;color:var(--ink-3);opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .2s var(--ease-out)}
@@ -842,15 +842,19 @@ main section.cat-group{scroll-margin-top:96px;padding:0;border-top:0}
 .cat-impact svg{flex:none;width:16px;height:16px;margin-top:2px;padding:2px;border-radius:50%;background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink-2)}
 .cat-none{padding:40px 0;color:var(--ink-3)}
 /* ---- markets */
-.sectors{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));border-radius:var(--r);overflow:hidden}
+.sectors{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));border-radius:var(--r);overflow:hidden}
 .sectors .pillar{border-radius:0}
 .sector .ico{margin-bottom:18px}
 .sector .count{font:500 11.5px var(--mono);letter-spacing:.06em;color:var(--ink-3);margin-top:14px;transition:color .2s}
 a.sector:hover .count{color:var(--ink)}
-.sol-toc{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px}
-.sol-toc a{font-size:12.5px;text-decoration:none;color:var(--ink-2);border:1px solid var(--rule-2);padding:6px 11px;border-radius:var(--r);transition:color .2s,border-color .2s}
-.sol-toc a:hover{border-color:var(--ink-3);color:var(--ink)}
-.sol{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);margin:0 0 20px;scroll-margin-top:84px}
+/* an industry page's solutions: the contents bar (the On this page pill below 1000px), chips on wide screens */
+@media screen and (min-width:1000px){
+  nav.toc.local.sol-toc{position:static;height:auto;margin:-12px 0 44px;padding:0;flex-wrap:wrap;gap:6px;overflow:visible;background:none;border:0}
+  nav.toc.local.sol-toc a{font-size:12.5px;color:var(--ink-2);border:1px solid var(--rule-2);padding:6px 11px;border-radius:var(--r);transition:color .2s,border-color .2s}
+  nav.toc.local.sol-toc a:hover,nav.toc.local.sol-toc a[aria-current="true"]{border-color:var(--ink-3);color:var(--ink)}
+  nav.toc.local.sol-toc a[aria-current="true"]::after{display:none}
+}
+.sol{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);margin:0 0 20px;scroll-margin-top:8px}   /* on top of the page's scroll-padding for the sticky bars */
 .sol:target{box-shadow:inset 0 0 0 1px var(--accent)}
 .sol > header{padding:20px 22px 16px;border-bottom:1px solid var(--rule)}
 .sol h3{margin:0;font-size:20px}
@@ -865,6 +869,30 @@ a.sector:hover .count{color:var(--ink)}
 .lab.problem,.lab.solution,.lab.impact,.lab.whyf{color:var(--ink-3)}
 .sol .sol-why{padding:16px 22px 18px;background:var(--surface-2);border-top:1px solid var(--rule)}
 .video{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:18px;margin:0 0 20px}
+/* on phones the data sheets are one list of rows (solSheets in _site.js), each opening to its sheet,
+   in the same frame and rows as the site's other accordions */
+.sol-h{display:none}
+@media screen and (max-width:760px){
+  .sol-list.acc{border:1px solid var(--rule);border-radius:14px;background:var(--surface);overflow:clip}   /* clip, not hidden: a hidden frame is a scroll box, and links to a sheet would land against it */
+  .sol-list.acc > .sol{margin:0;border:0;border-top:1px solid var(--rule);border-radius:0;background:none}
+  .sol-list.acc > .sol:first-child{border-top:0}
+  .sol-list.acc > .sol:target{box-shadow:none}
+  .sol-list.acc .sol-h{display:flex;width:100%;align-items:flex-start;justify-content:space-between;gap:14px;margin:0;padding:16px 18px;border:0;background:none;color:var(--ink);text-align:left;cursor:pointer;font:inherit}
+  .sol-h-t{min-width:0}
+  .sol-h-t b{display:block;font:600 16px/1.3 var(--font);color:var(--ink)}
+  .sol-h-t span{display:block;margin-top:4px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+  .sol-h svg{flex:none;width:14px;height:14px;margin-top:3px;color:var(--ink-3);transition:transform .25s var(--ease-out)}
+  .sol-h[aria-expanded="true"] svg{transform:rotate(180deg)}
+  .sol-list.acc > .sol > header,.sol-list.acc .sol-body{display:none}
+  .sol-list.acc > .sol.open > header{display:block;padding:0 18px 4px;border:0}
+  .sol-list.acc > .sol.open > header h3{display:none}
+  .sol-list.acc > .sol.open > header .summary{margin:0}
+  .sol-list.acc > .sol.open .sol-body{display:block}
+  .sol-list.acc .sol-cols > div{padding:14px 18px}
+  .sol-list.acc .sol-cols > div:first-child{border-top:0}
+  .sol-list.acc .sol .sol-why{padding:14px 18px 16px}
+  .sol-list.acc .sol ul{font-size:14.5px}
+}
 .video video{width:100%;border-radius:var(--r);display:block;margin-top:10px;background:#000}
 
 /* ---- about: timeline and links */
@@ -1189,7 +1217,7 @@ main section.cat-group{scroll-margin-top:96px}
 .cat-all{padding:0;font-size:14px;font-weight:500;color:var(--ink-2)}
 
 /* ---- the cards: hairline, flat, the same height across a row; the parts line up across it (subgrid) */
-.cat-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.cat-grid{grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:10px}
 .cat-card{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:4px;align-content:start;padding:18px 20px 19px;border:1px solid var(--rule);border-radius:var(--r-lg);background:var(--surface);
   transition:border-color .2s,background-color .2s}
 .cat-card h4{font:600 16px/1.35 var(--font);letter-spacing:-.005em;text-transform:none;color:var(--ink);margin:0;padding-right:28px}
@@ -1517,7 +1545,17 @@ main section[tabindex="-1"]:focus{outline:none}
    ====================================================================== */
 /* grids never end on an empty cell */
 .stats,.steps,.pillars,.sectors,.ex-panels{padding:1px 1px 0 1px}            /* the right-hand hairline is no longer clipped */
-.steps:has(> li:nth-child(5):last-child) > li:last-child{grid-column:span 2}
+@media screen and (min-width:761px){ .steps:has(> li:nth-child(5):last-child) > li:last-child{grid-column:span 2} }
+/* phones: the wide animated diagrams (How It Works, Collaborate) are drawn 1000 units across and would shrink to
+   type a few pixels high. The steps, tables and lists beside each one carry the same content, so on phones they
+   stand alone, without the highlight that follows the diagram's animation. */
+@media screen and (max-width:560px){
+  .diagram{display:none}
+  .steps li.active{background:var(--surface)}
+  .steps li.active .n{background:none;border-color:var(--rule-2);color:var(--ink-2)}
+  .poc-list li.active{border-color:transparent;background:none}
+  .steps li[data-step],.poc-list li{cursor:auto}
+}   /* phones have one column: spanning two would force a second and push steps off the screen */
 .cat-grid > :last-child:nth-child(odd){grid-column:1 / -1}
 @media screen and (min-width:761px) and (max-width:1060px){
   .stats.five{grid-template-columns:repeat(6,minmax(0,1fr))}

@@ -247,7 +247,7 @@
       tio.observe(tl);
     });
 
-    catalog(); arrows(); revealWords(); changes(); faceoff(); race(); localNav(); reveal(); counters(); spotlight(); pathBeam(); magnitude(); ripples(); tableLabels(); heroGrid(); explorer(); footField(); voxelHero(); voxelSystem();
+    catalog(); arrows(); revealWords(); changes(); faceoff(); race(); solSheets(); localNav(); reveal(); counters(); spotlight(); pathBeam(); magnitude(); ripples(); tableLabels(); heroGrid(); explorer(); footField(); voxelHero(); voxelSystem();
   });
 
   /* The arrow that ends many link and button labels ("Schedule a call →") goes into its
@@ -1081,6 +1081,37 @@
       var names = Array.prototype.map.call(t.querySelectorAll('thead th'), function(th){ return th.textContent.trim() });
       t.querySelectorAll('tbody tr').forEach(function(tr){ Array.prototype.forEach.call(tr.children, function(td, i){ if (names[i]) td.setAttribute('data-label', names[i]) }) });
     });
+  }
+
+  /* An industry page's data sheets (market.html). On phones each folds to a row with the solution's name
+     and its first impact, so the page reads as a list like the Markets catalog; a row opens its sheet, and a
+     link to a solution (from Markets or the On this page list) opens that one. Wider, every sheet is open. */
+  function solSheets () {
+    var list = document.querySelector('.sol-list');
+    if (!list) return;
+    var q = window.matchMedia('(max-width: 760px)'), sols = Array.prototype.slice.call(list.querySelectorAll(':scope > .sol'));
+    sols.forEach(function(s){
+      var body = s.querySelector('.sol-body'), imp = s.querySelector('.lab.impact + ul > li'), b = document.createElement('button');
+      body.id = s.id + '-sheet';
+      b.type = 'button'; b.className = 'sol-h'; b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-controls', body.id);
+      b.innerHTML = '<span class="sol-h-t"><b></b><span></span></span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg>';
+      b.querySelector('b').textContent = s.querySelector('h3').textContent;
+      b.querySelector('.sol-h-t > span').textContent = imp ? imp.textContent : '';
+      b.addEventListener('click', function(){ set(s, !s.classList.contains('open')) });
+      s.insertBefore(b, s.firstChild);
+    });
+    function set (s, on) { s.classList.toggle('open', on); s.querySelector('.sol-h').setAttribute('aria-expanded', on ? 'true' : 'false') }
+    function target (hash) { var s = hash && document.getElementById(decodeURIComponent(hash.slice(1))); return sols.indexOf(s) >= 0 ? s : null }
+    function fit () { list.classList.toggle('acc', q.matches) }
+    fit();
+    if (q.addEventListener) q.addEventListener('change', fit);
+    document.addEventListener('click', function(e){ var a = e.target.closest('a[href^="#"]'), s = a && target(a.getAttribute('href')); if (s) set(s, true) });
+    window.addEventListener('hashchange', function(){ var s = target(location.hash); if (s) set(s, true) });
+    var at = target(location.hash);                                          // arrived from Markets: open that sheet and land on it, now the others are folded
+    if (at) {
+      set(at, true);
+      if (q.matches) { at.scrollIntoView({block: 'start'}); window.addEventListener('load', function(){ at.scrollIntoView({block: 'start'}) }) }
+    }
   }
 
   /* Each explorer is built both ways once, tabs and accordion, and shows the one that fits the window:
