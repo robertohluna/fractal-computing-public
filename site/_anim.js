@@ -117,7 +117,7 @@ function animOnScreen (prefix) {
 (function(){
   var NS = 'http://www.w3.org/2000/svg', $ = function(id){ return document.getElementById(id) };
   var T  = 14000;                                                      // loop length, ms
-  if (!$('mesh-grid')) return;                                         // the page now shows the architecture as the 3D scene (_site.js)
+  if (!$('mesh-grid')) return;                                         // the diagram is on How It Works only
 
   // ---- instances
   var grid = $('mesh-grid'), conv = $('converge'), insts = [];
