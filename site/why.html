@@ -21,119 +21,191 @@
     <a href="#start">90‑day deployment</a>
   </nav>
 
-<!-- ============ THE PROBLEM: root cause, how corruption happens, the stakes ============ -->
+<%# The page explains the risk in four parts (after Doppler's "secrets sprawl" explainer): each part has its
+    label, heading and a short intro, then one visual module: tiles with an icon, a title and one line; the
+    consequences around the model at the center of the work; the approach as two illustrated cards. The text
+    is the apps_12.01 Why Fractal page and the executive brief; icons are line drawings in the ink colours. -%>
+<%  const I = {
+      inject:  '<path d="M4 17l6-6-6-6"/><path d="M12 19h8"/>',
+      halluc:  '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.9-.9 1.6V14"/><path d="M12 17.5h.01"/>',
+      cascade: '<rect x="9" y="2" width="6" height="6" rx="1"/><rect x="3" y="16" width="6" height="6" rx="1"/><rect x="15" y="16" width="6" height="6" rx="1"/><path d="M12 8v4"/><path d="M6 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/>',
+      clash:   '<path d="M8 3L4 7l4 4"/><path d="M4 7h16"/><path d="M16 21l4-4-4-4"/><path d="M20 17H4"/>',
+      drift:   '<path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="M18 2l4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="M18 14l4 4-4 4"/>',
+      bill:    '<path d="M5 2v20l3-2 2 2 2-2 2 2 2-2 3 2V2l-3 2-2-2-2 2-2-2-2 2z"/><path d="M9 8h6"/><path d="M9 12h6"/>',
+      record:  '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/>',
+      db:      '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+      lock:    '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+      review:  '<circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 4 1.5"/><path d="M16 19l2 2 4-4"/>',
+      box:     '<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>',
+      risk:    '<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+      cost:    '<circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18"/><path d="M7 6h1v4"/>',
+      slow:    '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+      eye:     '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+      shield:  '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+      fast:    '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>',
+      tokens:  '<path d="M19 5L5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+      audit:   '<path d="M3 17l2 2 4-4"/><path d="M3 7l2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/>' }
+    const ico = k => '<svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + I[k] + '</svg>' -%>
+
+<!-- ============ PART 1: THE PROBLEM ============ -->
 <section id="problem">
+  <p class="kicker">Part 1 of 4</p>
   <h2>The problem</h2>
-  <div class="topics">
-    <article class="topic" id="root-cause">
-      <h3>The root cause: AI needs read/write access to do its job</h3>
-      <div class="topic-body">
-        <p class="intro">Enterprise AI applications such as billing automation, customer care, transaction processing and rate planning need read/write access to your databases and systems of record to do anything useful.</p>
-        <p>That access is also the source of a critical, often overlooked risk. AI systems are complex and non-deterministic. The gap between "the AI writes the right thing" and "the AI corrupts your customer database" can be a single unexpected edge case.</p>
-        <p class="why"><b>AI technology cannot guarantee zero data corruption or loss.</b> The question is not whether it can happen; it is how you architect against it.</p>
-      </div>
-    </article>
-    <article class="topic" id="mechanism">
-      <h3>How data corruption happens</h3>
-      <div class="topic-body">
-        <p class="intro">AI systems can corrupt structured data in ways that are difficult to detect and expensive to reverse.</p>
-        <ul class="points">
-          <li><b>Prompt injection</b><span>Malicious or malformed inputs trigger unintended write operations against your databases.</span></li>
-          <li><b>Model hallucinations</b><span>The AI generates plausible but wrong values that are written back to systems of record.</span></li>
-          <li><b>Cascading failures</b><span>A single bad write triggers downstream writes across related records in multiple systems.</span></li>
-          <li><b>Concurrent agent conflicts</b><span>Several AI agents read and write the same records at the same time, with no coordination.</span></li>
-          <li><b>Model update drift</b><span>A model update changes behavior on production data without warning, rewriting records that were previously stable.</span></li>
-        </ul>
-        <p class="why">These are not hypothetical risks. They are active attack vectors and known failure modes of production AI systems.</p>
-      </div>
-    </article>
-    <article class="topic" id="stakes">
-      <h3>The stakes are existential</h3>
-      <div class="topic-body">
-        <div class="bluf warn">
-          <p>A corrupted billing database means wrong charges to millions of customers. A corrupted transaction record means regulatory failure. A corrupted system of record means litigation, audit findings, and remediation that takes months.</p>
-          <p>For enterprise AI applications running at scale, with millions of customers and billions of records, the blast radius of a single corruption event is a crisis. The reputational damage can be permanent, and for the executives responsible it can be career-ending.</p>
-        </div>
-      </div>
-    </article>
+  <div class="part-intro" id="root-cause">
+    <p class="lead"><strong>The root cause: AI needs read/write access to do its job.</strong> Enterprise AI applications such as billing automation, customer care, transaction processing and rate planning need read/write access to your databases and systems of record to do anything useful.</p>
+    <p class="lead">That access is also the source of a critical, often overlooked risk. AI systems are complex and non-deterministic. The gap between "the AI writes the right thing" and "the AI corrupts your customer database" can be a single unexpected edge case.</p>
+    <p class="why"><b>AI technology cannot guarantee zero data corruption or loss.</b> The question is not whether it can happen; it is how you architect against it.</p>
   </div>
+
+  <h3 class="mod-h" id="mechanism">How data corruption happens</h3>
+  <p class="mod-intro">AI systems can corrupt structured data in ways that are difficult to detect and expensive to reverse.</p>
+  <ul class="tiles">
+    <li><%- ico('inject') %><b>Prompt injection</b><span>Malicious or malformed inputs trigger unintended write operations against your databases.</span></li>
+    <li><%- ico('halluc') %><b>Model hallucinations</b><span>The AI generates plausible but wrong values that are written back to systems of record.</span></li>
+    <li><%- ico('cascade') %><b>Cascading failures</b><span>A single bad write triggers downstream writes across related records in multiple systems.</span></li>
+    <li><%- ico('clash') %><b>Concurrent agent conflicts</b><span>Several AI agents read and write the same records at the same time, with no coordination.</span></li>
+    <li><%- ico('drift') %><b>Model update drift</b><span>A model update changes behavior on production data without warning, rewriting records that were previously stable.</span></li>
+    <li class="tile-note"><span>These are not hypothetical risks. They are active attack vectors and known failure modes of production AI systems.</span></li>
+  </ul>
+
+  <h3 class="mod-h" id="stakes">The stakes are existential</h3>
+  <ul class="tiles">
+    <li><%- ico('bill') %><b>A corrupted billing database</b><span>means wrong charges to millions of customers.</span></li>
+    <li><%- ico('record') %><b>A corrupted transaction record</b><span>means regulatory failure.</span></li>
+    <li><%- ico('db') %><b>A corrupted system of record</b><span>means litigation, audit findings, and remediation that takes months.</span></li>
+  </ul>
+  <p class="statement part-statement" data-reveal-words>For enterprise AI applications running at scale, with millions of customers and billions of records, the blast radius of a single corruption event is a crisis. The reputational damage can be permanent, and for the executives responsible it can be career-ending.</p>
 </section>
 
-<!-- ============ WHY THE USUAL FIXES FAIL: guardrails, the model at the center ============ -->
+<!-- ============ PART 2: WHY THE USUAL FIXES FAIL ============ -->
 <section id="fixes">
+  <p class="kicker">Part 2 of 4</p>
   <h2>Why the usual fixes fail</h2>
-  <div class="topics">
-    <article class="topic" id="guardrails">
-      <h3>Guardrails and sandboxes aren't enough</h3>
-      <div class="topic-body">
-        <p class="intro">Enterprise teams typically respond to this risk with guardrails: restricting AI to read-only access, adding manual review layers, running AI in sandboxed environments, or limiting which tables AI can touch.</p>
-        <ul class="points">
-          <li><b>Read-only access</b><span>An AI system that cannot write cannot act. It neuters the usefulness of the application.</span></li>
-          <li><b>Manual review layers</b><span>A review layer that must approve every AI decision is not automation. It is a slower manual process, and it doesn't scale to millions of records.</span></li>
-          <li><b>Sandboxes and table limits</b><span>No sandbox eliminates the complexity of AI behavior across every edge case, and no guardrail prevents every form of prompt injection.</span></li>
-        </ul>
-        <p class="why"><b>If it can happen, it will happen.</b> Approaches that only make corruption less likely either defeat the purpose of automation or leave the risk in place.</p>
-      </div>
-    </article>
-    <article class="topic" id="center">
-      <h3>The deeper problem: the model sits at the center of the work</h3>
-      <div class="topic-body">
-        <p class="intro">Most Enterprise AI designs put the language model in the middle of the work. The model reads the data, reasons over it and writes the results. Corruption risk is only one consequence of that design.</p>
-        <ul class="points">
-          <li><b>Risky</b><span>A non-deterministic model with write access to production can corrupt millions of records at once.</span></li>
-          <li><b>Expensive</b><span>AI providers charge for every piece of data the model reads, so every record becomes tokens, and the bill grows with the data and with every rerun.</span></li>
-          <li><b>Slow</b><span>The model sits on top of the conventional database stack, where software spends most of its time waiting on I/O.</span></li>
-          <li><b>Exposes your data</b><span>Sensitive and private records are passed to the model, and the model needs credentials to your systems of record.</span></li>
-        </ul>
-        <p class="xref"><span class="xl">Detail</span> <a href="/how#tokens">Token economics →</a> <a href="/how#locality">Why conventional stacks are slow →</a></p>
-      </div>
-    </article>
+  <div class="part-intro" id="guardrails">
+    <p class="lead">Enterprise teams typically respond to this risk with guardrails: restricting AI to read-only access, adding manual review layers, running AI in sandboxed environments, or limiting which tables AI can touch.</p>
   </div>
-</section>
 
-<!-- ============ THE FRACTAL APPROACH: the digital twin, what you gain ============ -->
-<section id="twin">
-  <h2>The Fractal approach: a digital twin, with AI only at the edges</h2>
-  <p class="intro">Fractal changes where the work happens and where the model sits.</p>
-  <div class="topics">
-    <article class="topic">
-      <h3>The work runs on a digital twin</h3>
-      <div class="topic-body">
-          <ul>
-            <li>Fractal builds a <b>live, continuously updated replica</b> of your databases and systems of record, in a separate, protected environment on hardware you control.</li>
-            <li>It is not a backup or a snapshot: every record, relationship and field, kept in full fidelity as the source data changes.</li>
-            <li><b>Data flows one way</b>, from your systems of record into the twin. AI applications read, write, analyze and transform data in the twin; your systems of record are never touched by AI operations.</li>
-            <li>Validated, approved results can be promoted back to source systems through a controlled, auditable process. Nothing writes back without explicit authorization.</li>
-          </ul>
-      </div>
-    </article>
-    <article class="topic">
-      <h3>The model only starts and finishes</h3>
-      <div class="topic-body">
-          <ul>
-            <li>At the beginning, the model turns the user's request into a <b>Fractal App</b>: a small, bounded program.</li>
-            <li>Fractal runs the App in parallel across the twin, on commodity hardware, and returns compact results.</li>
-            <li>At the end, the model turns those results into a plain-language summary.</li>
-            <li>The model never reads the underlying records and never has credentials to the systems of record.</li>
-          </ul>
-      </div>
-    </article>
-  </div>
-  <p class="why"><b>This is an architectural guarantee.</b> If an AI agent hallucinates, gets injected or behaves unexpectedly, the damage is contained to the twin. It never reaches your production databases.</p>
-  <p class="xref"><span class="xl">Detail</span> <a href="/how#architecture">The architecture, animated →</a> <a href="/how#heavy-lifting">How the twin stays in sync →</a></p>
-  <div id="benefits" class="part">
-    <h3 class="part-h">What you gain</h3>
-    <ul class="points">
-      <li id="b-risk"><b>Zero corruption risk</b><span>Fractal AI applications operate only on the twin, so they cannot corrupt your original data. Fractal reports zero source-system corruption events across its production deployments.</span></li>
-      <li id="b-cost"><b>Faster, at a fraction of the cost</b><span>Conventional databases are built for transactions: point lookups and concurrent writes. The twin is built for the wide-scan, aggregate and transform work AI demands, with data and compute co-located on each Fractal instance. No central database, no middleware, no cloud dependency.</span></li>
-      <li id="b-tokens"><b>Immaterial token costs</b><span>The model handles only the request, the App and the results. Token use depends on how complex the question is, not on how much data is behind it.</span></li>
-      <li id="b-audit"><b>Answers you can audit</b><span>Once written, the App is ordinary code: the same input gives the same output, every time, and every figure in the summary can be traced to the computation that produced it.</span></li>
+  <h3 class="mod-h">Guardrails and sandboxes aren't enough</h3>
+  <ul class="tiles">
+    <li><%- ico('lock') %><b>Read-only access</b><span>An AI system that cannot write cannot act. It neuters the usefulness of the application.</span></li>
+    <li><%- ico('review') %><b>Manual review layers</b><span>A review layer that must approve every AI decision is not automation. It is a slower manual process, and it doesn't scale to millions of records.</span></li>
+    <li><%- ico('box') %><b>Sandboxes and table limits</b><span>No sandbox eliminates the complexity of AI behavior across every edge case, and no guardrail prevents every form of prompt injection.</span></li>
+  </ul>
+  <p class="why"><b>If it can happen, it will happen.</b> Approaches that only make corruption less likely either defeat the purpose of automation or leave the risk in place.</p>
+
+  <h3 class="mod-h" id="center">The deeper problem: the model sits at the center of the work</h3>
+  <p class="mod-intro">Most Enterprise AI designs put the language model in the middle of the work. The model reads the data, reasons over it and writes the results. Corruption risk is only one consequence of that design.</p>
+  <div class="center-map">
+    <figure class="cm-core">
+      <svg viewBox="0 0 320 380" role="img" aria-label="The language model reads every record from the systems of record and writes its results back to them.">
+        <defs>
+          <marker id="cm-ah-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-ah-out" d="M0 0 L10 5 L0 10 z"/></marker>
+          <marker id="cm-ah-back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-ah-back" d="M0 0 L10 5 L0 10 z"/></marker>
+        </defs>
+        <rect class="d-ai" x="40" y="20" width="240" height="92" rx="12"/>
+        <text class="d-t" x="160" y="58" text-anchor="middle">AI language model</text>
+        <text class="d-s" x="160" y="80" text-anchor="middle">Reads, reasons, writes</text>
+        <line class="d-back" x1="112" y1="266" x2="112" y2="118" marker-end="url(#cm-ah-back)"/>
+        <line class="d-out" x1="208" y1="116" x2="208" y2="264" marker-end="url(#cm-ah-out)"/>
+        <text class="d-m" x="100" y="196" text-anchor="end">READS</text>
+        <text class="d-m" x="100" y="211" text-anchor="end">EVERY</text>
+        <text class="d-m" x="100" y="226" text-anchor="end">RECORD</text>
+        <text class="d-m" x="220" y="196">WRITES</text>
+        <text class="d-m" x="220" y="211">THE</text>
+        <text class="d-m" x="220" y="226">RESULTS</text>
+        <rect class="d-sor" x="40" y="270" width="240" height="92" rx="12"/>
+        <text class="d-t" x="160" y="308" text-anchor="middle">Systems of record</text>
+        <text class="d-s" x="160" y="330" text-anchor="middle">Billing · CRM · ledgers</text>
+      </svg>
+    </figure>
+    <ul class="tiles cm-side">
+      <li><%- ico('risk') %><b>Risky</b><span>A non-deterministic model with write access to production can corrupt millions of records at once.</span></li>
+      <li><%- ico('cost') %><b>Expensive</b><span>AI providers charge for every piece of data the model reads, so every record becomes tokens, and the bill grows with the data and with every rerun.</span></li>
+    </ul>
+    <ul class="tiles cm-side">
+      <li><%- ico('slow') %><b>Slow</b><span>The model sits on top of the conventional database stack, where software spends most of its time waiting on I/O.</span></li>
+      <li><%- ico('eye') %><b>Exposes your data</b><span>Sensitive and private records are passed to the model, and the model needs credentials to your systems of record.</span></li>
     </ul>
   </div>
+  <p class="xref"><span class="xl">Detail</span> <a href="/how#tokens">Token economics →</a> <a href="/how#locality">Why conventional stacks are slow →</a></p>
+</section>
+
+<!-- ============ PART 3: THE FRACTAL APPROACH ============ -->
+<section id="twin">
+  <p class="kicker">Part 3 of 4</p>
+  <h2>The Fractal approach: a digital twin, with AI only at the edges</h2>
+  <div class="part-intro">
+    <p class="lead">Fractal changes where the work happens and where the model sits.</p>
+  </div>
+  <div class="tw-cards">
+    <article class="tw-card">
+      <figure>
+        <svg viewBox="0 0 520 170" role="img" aria-label="Data flows one way, from the systems of record into the digital twin, where AI applications work.">
+          <defs><marker id="tw-ah-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-ah-out" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+          <rect class="d-sor" x="10" y="40" width="170" height="90" rx="12"/>
+          <text class="d-t" x="95" y="80" text-anchor="middle">Systems of record</text>
+          <text class="d-s" x="95" y="102" text-anchor="middle">Never touched by AI</text>
+          <line class="d-out" x1="186" y1="85" x2="330" y2="85" marker-end="url(#tw-ah-out)"/>
+          <text class="d-m" x="258" y="73" text-anchor="middle">ONE-WAY SYNC</text>
+          <rect class="d-mesh" x="336" y="40" width="174" height="90" rx="12"/>
+          <text class="d-t" x="423" y="80" text-anchor="middle">Digital twin</text>
+          <text class="d-s" x="423" y="102" text-anchor="middle">AI reads and writes here</text>
+        </svg>
+      </figure>
+      <h3>The work runs on a digital twin</h3>
+      <ul>
+        <li>Fractal builds a <b>live, continuously updated replica</b> of your databases and systems of record, in a separate, protected environment on hardware you control.</li>
+        <li>It is not a backup or a snapshot: every record, relationship and field, kept in full fidelity as the source data changes.</li>
+        <li><b>Data flows one way</b>, from your systems of record into the twin. AI applications read, write, analyze and transform data in the twin; your systems of record are never touched by AI operations.</li>
+        <li>Validated, approved results can be promoted back to source systems through a controlled, auditable process. Nothing writes back without explicit authorization.</li>
+      </ul>
+    </article>
+    <article class="tw-card">
+      <figure>
+        <svg viewBox="0 0 520 170" role="img" aria-label="The model turns the request into a Fractal App, Fractal runs it across the twin, and the model turns the results into a summary.">
+          <defs>
+            <marker id="tw2-ah-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-ah-out" d="M0 0 L10 5 L0 10 z"/></marker>
+            <marker id="tw2-ah-back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-ah-back" d="M0 0 L10 5 L0 10 z"/></marker>
+          </defs>
+          <rect class="d-ai" x="10" y="40" width="120" height="90" rx="12"/>
+          <text class="d-t" x="70" y="80" text-anchor="middle">Model</text>
+          <text class="d-s" x="70" y="102" text-anchor="middle">Request in</text>
+          <line class="d-out" x1="136" y1="85" x2="194" y2="85" marker-end="url(#tw2-ah-out)"/>
+          <text class="d-m" x="165" y="73" text-anchor="middle">APP</text>
+          <rect class="d-mesh" x="200" y="40" width="120" height="90" rx="12"/>
+          <text class="d-t" x="260" y="80" text-anchor="middle">Fractal</text>
+          <text class="d-s" x="260" y="102" text-anchor="middle">Runs on the twin</text>
+          <line class="d-back" x1="326" y1="85" x2="384" y2="85" marker-end="url(#tw2-ah-back)"/>
+          <text class="d-m" x="355" y="73" text-anchor="middle">RESULTS</text>
+          <rect class="d-ai" x="390" y="40" width="120" height="90" rx="12"/>
+          <text class="d-t" x="450" y="80" text-anchor="middle">Model</text>
+          <text class="d-s" x="450" y="102" text-anchor="middle">Summary out</text>
+        </svg>
+      </figure>
+      <h3>The model only starts and finishes</h3>
+      <ul>
+        <li>At the beginning, the model turns the user's request into a <b>Fractal App</b>: a small, bounded program.</li>
+        <li>Fractal runs the App in parallel across the twin, on commodity hardware, and returns compact results.</li>
+        <li>At the end, the model turns those results into a plain-language summary.</li>
+        <li>The model never reads the underlying records and never has credentials to the systems of record.</li>
+      </ul>
+    </article>
+  </div>
+  <p class="statement part-statement" data-reveal-words>This is an architectural guarantee. If an AI agent hallucinates, gets injected or behaves unexpectedly, the damage is contained to the twin. It never reaches your production databases.</p>
+  <p class="xref"><span class="xl">Detail</span> <a href="/how#architecture">The architecture, animated →</a> <a href="/how#heavy-lifting">How the twin stays in sync →</a></p>
+
+  <h3 class="mod-h" id="benefits">What you gain</h3>
+  <ul class="tiles four">
+    <li id="b-risk"><%- ico('shield') %><b>Zero corruption risk</b><span>Fractal AI applications operate only on the twin, so they cannot corrupt your original data. Fractal reports zero source-system corruption events across its production deployments.</span></li>
+    <li id="b-cost"><%- ico('fast') %><b>Faster, at a fraction of the cost</b><span>Conventional databases are built for transactions: point lookups and concurrent writes. The twin is built for the wide-scan, aggregate and transform work AI demands, with data and compute co-located on each Fractal instance. No central database, no middleware, no cloud dependency.</span></li>
+    <li id="b-tokens"><%- ico('tokens') %><b>Immaterial token costs</b><span>The model handles only the request, the App and the results. Token use depends on how complex the question is, not on how much data is behind it.</span></li>
+    <li id="b-audit"><%- ico('audit') %><b>Answers you can audit</b><span>Once written, the App is ordinary code: the same input gives the same output, every time, and every figure in the summary can be traced to the computation that produced it.</span></li>
+  </ul>
 </section>
 
 <!-- ============ START ============ -->
 <section id="start">
+  <p class="kicker">Part 4 of 4</p>
   <h2>Getting started: a 90‑day parallel deployment</h2>
   <p>A 90‑day parallel deployment runs Fractal alongside your existing systems, using your production data. Nothing in your current environment changes. You run both environments side by side and compare corruption-risk posture, cost, performance and reliability with real numbers before committing to any transition.</p>
   <p class="xref"><span class="xl">Next</span> <a href="/how#start">The 90‑day plan →</a> <a href="/#path">The migration path →</a></p>

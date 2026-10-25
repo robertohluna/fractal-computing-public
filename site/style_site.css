@@ -1513,39 +1513,74 @@ h3,h4,.sys-steps b,.apps b,.ind b,.trio h3,.cat-card h4,.stage + h3{text-wrap:ba
   .stats .stat,.stats.five .stat:last-child{grid-template-columns:minmax(0,1fr);row-gap:6px}
 }
 
-/* ---- Topics: a chapter's sub-sections laid open, in place of tabs (Why Fractal, Benchmarks, Collaborate).
-   Wide screens set each topic's heading in a left column that stays in view while its text is read, the text
-   on the right, a hairline between topics; a topic with a diagram runs full width. Phones stack heading and
-   text. Points are ruled rows (label, then text), not cards; the closing statement is a ruled line, not a box. */
-.topic{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:clamp(32px,5vw,72px);padding:40px 0 44px;border-top:1px solid var(--rule)}
-.topic:first-child{border-top:0;padding-top:8px}
-.topic > h3{position:sticky;top:144px;align-self:start;margin:0;font:650 clamp(22px,2vw,28px)/1.15 var(--font);font-stretch:88%;letter-spacing:-.012em;color:var(--ink);text-wrap:balance}
-.topic-body{min-width:0}
-.topic-body > p{font-size:17px;line-height:1.6;color:var(--ink-2);max-width:64ch;margin:0 0 14px}
-.topic-body > p.intro{font-size:18px;color:var(--ink);margin-bottom:22px}
+/* ---- Topics: a chapter's sub-sections laid open, in place of tabs (Benchmarks, Collaborate), in the same form as
+   the parts of Why Fractal: the topic's heading, its short intro, then its module at full width. */
+.topic + .topic{margin-top:72px}
+.topic > h3{margin:0 0 10px;font:650 clamp(22px,2.2vw,28px)/1.15 var(--font);font-stretch:88%;letter-spacing:-.012em;color:var(--ink);text-wrap:balance}
+.topic-body > p{max-width:64ch;margin:0 0 14px;font-size:17px;line-height:1.6;color:var(--ink-2)}
+.topic-body > p.intro{margin-bottom:24px}
 .topic-body > :last-child{margin-bottom:0}
-.topic.wide{display:block}
-.topic.wide > h3{position:static;margin-bottom:16px;max-width:none}
-.topic .why{max-width:64ch;font-size:16.5px}
-.topic .bluf.warn{padding:0;background:none;border:0;border-radius:0}
-.topic .bluf.warn p{font-size:18px;line-height:1.6}
-.topic .risks{border:0;border-radius:0;background:none;border-top:1px solid var(--rule)}
-.topic .risks li:first-child{border-top:0}
-.points{list-style:none;margin:4px 0 0;padding:0;border-top:1px solid var(--rule)}
-.points li{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,5fr);column-gap:28px;padding:18px 0 19px;border-bottom:1px solid var(--rule)}
-.points b{font:650 17px/1.3 var(--font);font-stretch:90%;color:var(--ink)}
-.points span{font-size:15.5px;line-height:1.55;color:var(--ink-2)}
-@media screen and (max-width:860px){
-  .topic{grid-template-columns:minmax(0,1fr);row-gap:14px;padding:30px 0 32px}
-  .topic > h3{position:static}
-}
-@media screen and (max-width:560px){
-  .points li{grid-template-columns:minmax(0,1fr);row-gap:4px}
+@media screen and (max-width:760px){
+  .topic + .topic{margin-top:56px}
 }
 h2 + .topics,p.intro + .topics{margin-top:28px}
-.part > .points{margin-top:18px}
-.topic-body > ul:not(.points){margin:0;padding-left:18px;font-size:16.5px;line-height:1.6;color:var(--ink-2);max-width:64ch}
-.topic-body > ul:not(.points) li{margin:0 0 10px}
-.topic-body > ul:not(.points) li::marker{color:var(--ink-3)}
+.topic-body > ul{margin:0;padding-left:18px;font-size:16.5px;line-height:1.6;color:var(--ink-2);max-width:64ch}
+.topic-body > ul li{margin:0 0 10px}
+.topic-body > ul li::marker{color:var(--ink-3)}
 @media screen and (min-width:761px){ .topic .steps{grid-template-columns:repeat(2,minmax(0,1fr))} }   /* full-width topics: two columns, so five and six steps fill their rows */
 .steps + .why,.poc-list + .why{margin-top:28px}
+
+/* ---- Why Fractal in parts (after Doppler's "secrets sprawl" explainer and Vercel's security tiles): each part
+   has its label, heading and a short intro, then one visual module. Tiles carry an icon, a title and one line;
+   the deeper problem is the model drawn at the center with its four costs around it; the approach is two
+   illustrated cards; closing lines are statements that light up word by word as they are read. One level of
+   cards on the page, never a card inside a card. */
+.part-intro{max-width:68ch}
+.part-intro .lead + .lead{margin-top:14px}
+.part-intro .why{margin-top:24px}
+.mod-h{margin:72px 0 10px;font:650 clamp(22px,2.2vw,28px)/1.15 var(--font);font-stretch:88%;letter-spacing:-.012em;color:var(--ink);text-wrap:balance}
+.mod-intro{max-width:62ch;margin:0 0 26px;font-size:17px;line-height:1.6;color:var(--ink-2)}
+.mod-h + .tiles,.mod-h + .center-map{margin-top:24px}
+.tiles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tiles.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tiles > li{display:flex;flex-direction:column;padding:26px 24px 28px;background:var(--surface);border:1px solid var(--rule);border-radius:14px;scroll-margin-top:8px}
+.tiles .ti{flex:none;width:28px;height:28px;margin:0 0 24px;color:var(--ink)}
+.tiles b{display:block;margin:0 0 8px;font:650 19px/1.25 var(--font);font-stretch:90%;letter-spacing:-.005em;color:var(--ink)}
+.tiles span{font-size:15px;line-height:1.55;color:var(--ink-2)}
+.tiles > li.tile-note{justify-content:flex-end;background:none;border-color:var(--rule-2)}
+.tiles > li.tile-note span{font:600 19px/1.4 var(--font);font-stretch:92%;letter-spacing:-.005em;color:var(--ink)}
+.tiles + .why{margin-top:28px}
+.statement.part-statement{max-width:40ch;margin:72px 0 0;font-size:clamp(24px,2.6vw,34px);line-height:1.3}
+.part-statement + .xref{margin-top:32px}
+.center-map{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr) minmax(0,1fr);gap:14px;align-items:center}
+.cm-core{grid-column:2;grid-row:1;margin:0;padding:8px 6px}
+.cm-core svg,.tw-card svg{display:block;width:100%;height:auto}
+.center-map > .cm-side{grid-row:1;grid-template-columns:minmax(0,1fr)}
+.center-map > .cm-side:first-of-type{grid-column:1}
+.center-map > .cm-side:last-of-type{grid-column:3}
+.tw-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:8px}
+.tw-card{padding:26px 26px 28px;background:var(--surface);border:1px solid var(--rule);border-radius:14px}
+.tw-card figure{margin:4px 0 26px}
+.tw-card h3{margin:0 0 14px;font:650 21px/1.2 var(--font);font-stretch:88%;letter-spacing:-.01em;color:var(--ink)}
+.tw-card ul{margin:0;padding-left:18px;font-size:15.5px;line-height:1.6;color:var(--ink-2)}
+.tw-card li{margin:0 0 9px}
+.tw-card li::marker{color:var(--ink-3)}
+.tw-card li b{color:var(--ink);font-weight:600}
+@media screen and (max-width:1000px){
+  .tiles.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .center-map{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cm-core{grid-column:1 / -1;grid-row:1;justify-self:center;width:100%;max-width:360px}
+  .center-map > .cm-side{grid-row:2}
+  .center-map > .cm-side:first-of-type{grid-column:1}
+  .center-map > .cm-side:last-of-type{grid-column:2}
+}
+@media screen and (max-width:760px){
+  .tiles,.tiles.four,.tw-cards,.center-map{grid-template-columns:minmax(0,1fr)}
+  .center-map > .cm-side,.center-map > .cm-side:first-of-type,.center-map > .cm-side:last-of-type{grid-column:1;grid-row:auto}
+  .cm-core{max-width:300px}
+  .tiles > li{padding:22px 20px 24px}
+  .tiles .ti{margin-bottom:18px}
+  .mod-h{margin-top:56px}
+  .statement.part-statement{margin-top:56px;font-size:24px}
+  .tw-card{padding:22px 20px 24px}
+}
