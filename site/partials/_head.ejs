@@ -1,18 +1,51 @@
 <%# Shared <head> for every page of the site. Called as
-    include('partials/_head', {title, desc}); env (with env.nonce) comes from the page's own data. -%>
+    include('partials/_head', {title, desc, path}); env (with env.nonce) comes from the page's own data.
+    path (eg. '/why') makes the canonical address and the address shared on social sites. Each page has its
+    own shared preview image, images/og/<path with / as ->.jpg (1200 x 630, eg. og/markets-Gas_Utility.jpg),
+    drawn from the home hero with that page's headline. A preview copy of the site passes its own address
+    as env.site (preview.mjs, SITE_URL), so links shared from it show its pages and images and stay out of search. -%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><%= locals.title ? title + ' · Fractal Computing' : 'Fractal Computing' %></title>
+<%  const LIVE = 'https://fractal-computing.com'
+    const SITE = (locals.env && env.site) || LIVE
+    const page = locals.path || '/'
+    const name = locals.title ? title + ' · Fractal Computing' : 'Fractal Computing · The data and computing foundation for enterprise AI'
+    const url  = SITE + page
+    const og   = SITE + '/apps/images/og/' + (page.slice(1).replace(/\//g, '-') || 'home') + '.jpg' -%>
+<title><%= name %></title>
 <% if (locals.desc) { %><meta name="description" content="<%= desc %>">
 <% } -%>
+<link rel="canonical" href="<%= url %>">
+<% if (SITE !== LIVE) { %><meta name="robots" content="noindex">
+<% } -%>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fractal Computing">
+<meta property="og:title" content="<%= name %>">
+<% if (locals.desc) { %><meta property="og:description" content="<%= desc %>">
+<% } -%>
+<meta property="og:url" content="<%= url %>">
+<meta property="og:image" content="<%= og %>">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="<%= name %>, beside the Fractal logo cube">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= name %>">
+<% if (locals.desc) { %><meta name="twitter:description" content="<%= desc %>">
+<% } -%>
+<meta name="twitter:image" content="<%= og %>">
+<meta name="theme-color" content="#0a0c10" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f6f7" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark light">
+<meta name="apple-mobile-web-app-title" content="Fractal">
 <link rel="icon"                         href="/apps/images/favicon_color.png">
 <link rel="apple-touch-icon-precomposed" href="/apps/images/favicon_color.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/apps/style_site.css">
 <script nonce="<%- env.nonce %>">/* apply a saved theme choice before first paint, so the page doesn't flash the other theme;
    mark the page as scripted, so content that _site.js animates in (eg. .timeline[data-animate]) starts hidden only when it will be animated */

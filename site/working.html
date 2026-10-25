@@ -1,26 +1,26 @@
-<%- include('partials/_head', {title:'Working with Fractal', desc:'Fractal builds market segment applications on the Fractal Computing framework and sells them as a service, directly and through channel partners. How applications are built, how partners take part and how they are paid.'}) %>
+<%- include('partials/_head', {title:'Collaborate', desc:'Fractal builds market segment applications on the Fractal Computing framework and sells them as a service, directly and through channel partners. How applications are built, how partners take part and how they are paid.', path:'/working'}) %>
 <body>
 <%- include('partials/_nav', {page:'working'}) %>
 
 <%# Working with Fractal: the business model (in-house and collaboration applications,
     distribution, channel roles, continuous development) and links to the standard
-    partner agreements. Diagrams are animated by _working.js. -%>
+    partner agreements. Diagrams are animated by _working.js. Distribution and the
+    channel roles are the two panels of one rich explorer (_site.js); the diagram on the
+    panel not shown holds its frame until its panel is opened. -%>
 <main id="main" class="wrap">
 <header class="hero">
   <h1>Working with Fractal</h1>
   <p class="lede">Fractal builds applications for specific market segments on the Fractal Computing framework, and sells them as a service, both directly and through channel partners. Partners can help build those applications, help sell them, or both, and are paid for every role they provide.</p>
-  <nav class="toc" aria-label="Contents">
+</header>
+  <nav class="toc local" aria-label="Contents">
     <a href="#model">The model</a>
-    <a href="#build">How applications are built</a>
     <a href="#market">Going to market</a>
-    <a href="#roles">Channel roles</a>
     <a href="#ongoing">Always improving</a>
     <a href="#agreements">Agreements</a>
   </nav>
-</header>
 
 
-<!-- ============ THE MODEL ============ -->
+<!-- ============ THE MODEL: one framework, and the two ways an application gets built ============ -->
 <section id="model">
   <h2>One framework, many market applications</h2>
   <p class="intro">Every Fractal application is built on the same Fractal Computing framework, and each one is made for a particular market segment: its data, its regulations and the questions its people ask. The applications are delivered as a service, so customers subscribe to an outcome rather than buying and running software.</p>
@@ -49,7 +49,7 @@
     <polyline id="wb-r3" class="d-route" points="350,96 620,96 620,176"/>
     <polyline id="wb-r4" class="d-route" points="880,118 880,140 420,140 420,176"/>
     <polyline id="wb-r5" class="d-route" points="30,118 30,356"/>
-    <g id="wb-block" style="opacity:0">
+    <g id="wb-block" class="wk-band">
       <polyline id="wb-rb" class="d-block" points="880,140 880,158 700,158"/>
       <path class="d-x" d="M684 150 L700 166 M700 150 L684 166"/>
       <text class="d-m wk-bad" x="880" y="176" text-anchor="middle">NEEDS THE PARTNER'S PERMISSION</text>
@@ -123,11 +123,9 @@
     <div class="pillar"><h3>Market segment applications</h3><p>Each application is made for one market segment, built on the framework with that segment's data structures, context libraries and workflows.</p><a class="more" href="/markets">Solutions by industry →</a></div>
     <div class="pillar"><h3>Sold as a service</h3><p>Customers subscribe to the application rather than buying a license and running it themselves. Fractal operates it, keeps it current and collects the subscription revenue.</p></div>
   </div>
-</section>
 
-<!-- ============ HOW APPLICATIONS ARE BUILT ============ -->
-<section id="build">
-  <h2>Two ways an application gets built</h2>
+  <div id="build" class="part">
+  <h3 class="part-h">Two ways an application gets built</h3>
   <p class="intro">Some applications are built entirely by Fractal engineering. Others combine Fractal's work with a capability that a partner company already has: a domain model, a data source, an algorithm, a set of rules or a workflow that took the partner years to perfect.</p>
   <div class="vs">
     <div class="wk-inhouse">
@@ -152,12 +150,21 @@
   </div>
   <p class="why"><b>Why collaborate:</b> a partner's capability reaches customers as part of a production-scale application, at Fractal's speed and cost, without the partner building or running the platform. Fractal gets depth in a segment that would take years to build alone.</p>
   <p class="xref"><span class="xl">Agreement</span> <a href="/working/license">Partner Contribution License Agreement →</a></p>
+  </div>
 </section>
 
-<!-- ============ GOING TO MARKET ============ -->
+<!-- ============ GOING TO MARKET: distribution and the channel partner roles ============ -->
 <section id="market">
-  <h2>Taking applications to market</h2>
-  <p class="intro">Fractal sells its applications as a service, both directly and through channel partners. The distribution model is chosen for each market segment, according to how that segment buys. In one segment Fractal may sell directly to large enterprises; in another it may work through partners who already have the customer relationships, the contracts or the integration skills that segment needs.</p>
+  <h2>Going to market</h2>
+  <p class="intro">Fractal sells its applications as a service, both directly and through channel partners.</p>
+
+  <div class="explorer rich" data-explorer>
+  <div class="ex-tabs" role="tablist" aria-label="Going to market"></div>
+  <div class="ex-panels">
+
+  <div class="pillar">
+  <h3>Taking applications to market</h3>
+  <p class="intro">The distribution model is chosen for each market segment, according to how that segment buys. In one segment Fractal may sell directly to large enterprises; in another it may work through partners who already have the customer relationships, the contracts or the integration skills that segment needs.</p>
 
   <div class="diagram">
   <svg viewBox="0 0 1000 430" role="img" aria-labelledby="wm-title wm-desc">
@@ -245,11 +252,10 @@
     <li data-step="4" tabindex="0"><span class="n back">4</span><b>Channel partners are paid for each role</b> they performed in winning and serving the customer.</li>
     <li data-step="5" tabindex="0"><span class="n back">5</span><b>Collaboration partners are paid as revenue is collected</b> from the application their capability is licensed into.</li>
   </ol>
-</section>
+  </div>
 
-<!-- ============ CHANNEL ROLES ============ -->
-<section id="roles">
-  <h2>Channel partner roles</h2>
+  <div class="pillar" id="roles">
+  <h3>Channel partner roles</h3>
   <p class="intro">A channel partner can take on any of six roles, from introducing a customer to building Fractal's application into its own product. Fractal encourages partners to take every role that fits their business model, and pays for each one. <strong>The more roles a partner provides, the greater its portion of the revenue.</strong></p>
   <p class="intro">Each role is made up of specific services, such as account management, application deployment or a level of technical support. Each service earns a set share of the customer’s subscription in each of the customer’s first three years.</p>
 
@@ -287,6 +293,10 @@
   </ol>
   <p class="why"><b>Roles combine in any way that fits.</b> A partner doesn't have to start at referral, or take the roles in order. A system integrator might also refer and resell; a software company might be an OEM in one segment and a referral partner in another. Each role a partner fills adds to its share.</p>
   <p class="xref"><span class="xl">Agreement</span> <a href="/working/channel">Channel Partner Agreement: every service and its share, by year →</a></p>
+  </div>
+
+  </div>
+  </div>
 </section>
 
 <!-- ============ ALWAYS IMPROVING ============ -->

@@ -1,26 +1,86 @@
-<%- include('partials/_head', {title:'Markets', desc:'Production-proven Fractal solutions for 11 industries, each running as a parallel digital twin with no changes to your systems of record.'}) %>
+<%- include('partials/_head', {title:'Markets', desc:'Production-proven Fractal solutions for 11 industries, each running as a parallel digital twin with no changes to your systems of record.', path:'/markets'}) %>
 <body>
 <%- include('partials/_nav', {page:'markets'}) %>
 
-<%# Markets overview. env.sectors is data/markets.json, passed in by index.mjs. -%>
+<%# Markets: every industry's solutions in one catalog (after the integrations directories of
+    Linear and Vercel). env.sectors is data/markets.json, passed in by index.mjs. One compact header,
+    then the catalog: a sidebar with the search and the industries with their counts, and a main
+    column grouping the solutions by industry, each card opening that solution's data sheet. On
+    phones the industries become a picker next to the search (a native select, so it opens the
+    phone's own list) and the cards become compact rows of name and impact. Without scripts it is
+    the full grouped list; _site.js adds the filtering and search. Each industry gets a line icon
+    drawn here (the emoji in the data's "icon" field are not used). -%>
+<%  const ICONS = {
+      Electric_Utility:   '<path d="M13 2L4 14h8l-1 8 9-12h-8l1-8z"/>',
+      Gas_Utility:        '<path d="M12 22a7 7 0 0 0 7-7c0-3-2-5.5-4-7.5-.4 2-1.6 3.4-3 4-.2-3.4-1.6-6-4-9.5C8 6 5 9.4 5 15a7 7 0 0 0 7 7z"/>',
+      Water_Utility:      '<path d="M12 2.7l5.7 5.7a8 8 0 1 1-11.4 0z"/>',
+      Telecommunications: '<path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 9.5a15 15 0 0 1 20 0"/><circle cx="12" cy="20" r="1"/>',
+      Financial:          '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+      Healthcare:         '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+      Insurance:          '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+      Logistics:          '<path d="M1 4h14v12H1z"/><path d="M15 8h4l4 4v4h-8z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/>',
+      Retail:             '<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+      Oil_And_Gas:        '<path d="M3 22V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v17"/><path d="M2 22h12"/><path d="M13 10h2a2 2 0 0 1 2 2v3a2 2 0 0 0 4 0V8l-3-3"/><path d="M6 8h4"/>',
+      Government:         '<path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M12 2l9 5H3z"/>'
+    }
+    const icon = slug => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[slug] || '<circle cx="12" cy="12" r="9"/>') + '</svg>'
+    const total = env.sectors.reduce((a, s) => a + s.solutions.length + (s.video ? 1 : 0), 0) -%>
 <main id="main" class="wrap">
-<header class="hero">
+<header class="hero mk-hero">
   <h1>Fractal solutions for your industry</h1>
-  <p class="lede">Production-proven solutions across utilities, telecommunications, financial services, healthcare and more. Every one runs as a parallel digital twin: no changes to your systems of record, no corruption risk and no disruption.</p>
+  <p class="lede">Production-proven solutions across utilities, telecommunications, financial services, healthcare and more. Every one runs as a parallel digital twin: no changes to your systems of record, no corruption risk and no disruption. Each industry page is a library of solution data sheets: the problem, what Fractal delivered, the impact and why Fractal made the difference.</p>
 </header>
 
-<section id="sectors">
-  <h2>Solutions by sector</h2>
-  <p class="intro">Each industry page is a library of solution data sheets: the problem, what Fractal delivered, the impact and why Fractal made the difference.</p>
-  <div class="sectors">
-<% env.sectors.forEach(function(s){ const n = s.solutions.length + (s.video ? 1 : 0) -%>
-    <a class="pillar sector" href="/markets/<%= s.slug %>">
-      <div class="icon" aria-hidden="true"><%= s.icon %></div>
-      <h3><%= s.name %></h3>
-      <p><%= s.blurb %></p>
-      <div class="count"><%= n %> solution<%= n === 1 ? '' : 's' %> →</div>
-    </a>
+<section id="sectors" class="catalog-sec" aria-labelledby="sectors-h">
+  <div class="catalog" data-catalog>
+    <div class="cat-side">
+      <h2 class="cat-label" id="sectors-h">Solutions by sector</h2>
+      <div class="cat-tools">
+        <label class="cat-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input type="search" name="q" placeholder="Search" aria-label="Search solutions" autocomplete="off">
+        </label>
+        <label class="cat-pick">
+          <select name="industry" aria-label="Industry">
+            <option value="all">All industries</option>
+<% env.sectors.forEach(function(s){ -%>
+            <option value="<%= s.slug %>"><%= s.name %></option>
 <% }) -%>
+          </select>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+        </label>
+      </div>
+      <nav class="cat-list" aria-labelledby="sectors-h">
+        <a href="#sectors" data-filter="all" aria-current="true"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>All industries<span class="n"><%= total %></span></a>
+<% env.sectors.forEach(function(s){ -%>
+        <a href="#s-<%= s.slug %>" data-filter="<%= s.slug %>"><span class="ico"><%- icon(s.slug) %></span><%= s.name %><span class="n"><%= s.solutions.length + (s.video ? 1 : 0) %></span></a>
+<% }) -%>
+      </nav>
+    </div>
+
+    <div class="cat-main">
+      <p class="cat-none" hidden>No solutions match your search.</p>
+<% env.sectors.forEach(function(s){ const n = s.solutions.length + (s.video ? 1 : 0) -%>
+      <section class="cat-group" id="s-<%= s.slug %>" data-sector="<%= s.slug %>">
+        <header class="cat-head">
+          <h3><a href="/markets/<%= s.slug %>"><span class="ico"><%- icon(s.slug) %></span><%= s.name %></a></h3>
+          <a class="cat-all" href="/markets/<%= s.slug %>"><%= n %> solution<%= n === 1 ? '' : 's' %> <span class="arr" aria-hidden="true">→</span></a>
+          <p><%= s.blurb %></p>
+        </header>
+<%   if (s.solutions.length) { -%>
+        <div class="cat-grid">
+<%     s.solutions.forEach(function(x){ -%>
+          <a class="cat-card" href="/markets/<%= s.slug %>#<%= x.id %>" data-text="<%= (x.name + ' ' + (x.summary || '') + ' ' + x.problem.join(' ') + ' ' + x.impact.join(' ') + ' ' + s.name).toLowerCase() %>">
+            <h4><%= x.name %></h4>
+<%       if (x.summary) { %>            <p class="cat-kw"><%= x.summary.split(/\s*·\s*/).join(' · ') %></p>
+<%       } if (x.impact.length) { %>            <p class="cat-impact"><%= x.impact[0] %></p>
+<%       } %>          </a>
+<%     }) -%>
+        </div>
+<%   } -%>
+      </section>
+<% }) -%>
+    </div>
   </div>
 </section>
 

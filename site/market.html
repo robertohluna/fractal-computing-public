@@ -1,5 +1,5 @@
 <%  const s = env.sector, n = s.solutions.length + (s.video ? 1 : 0) -%>
-<%- include('partials/_head', {title:s.name, desc:s.sub}) %>
+<%- include('partials/_head', {title:s.name, desc:s.sub, path:'/markets/' + s.slug}) %>
 <body>
 <%- include('partials/_nav', {page:'markets'}) %>
 

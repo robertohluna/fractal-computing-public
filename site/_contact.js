@@ -28,11 +28,13 @@
       .then(function(res){
         if (!res.ok) throw new Error('HTTP ' + res.status);
         form.hidden = true; done.style.display = 'block';
+        var r = done.getBoundingClientRect();                     // on a phone the form was taller than the screen: bring the confirmation into view
+        if (r.top < 0 || r.bottom > window.innerHeight) done.scrollIntoView({block: 'center'});
       })
       .catch(function(){
         btn.textContent = label; btn.disabled = false;
         fail('Something went wrong. Please try again, or email us directly.');
       });
   });
-  form.addEventListener('input', function(e){ if (e.target.getAttribute('aria-invalid') === 'true') { e.target.classList.remove('invalid'); e.target.closest('label') && e.target.closest('label').classList.remove('invalid'); e.target.setAttribute('aria-invalid', 'false') } });
+  form.addEventListener('input', function(e){ if (e.target.getAttribute('aria-invalid') === 'true') { e.target.classList.remove('invalid'); e.target.closest('label') && e.target.closest('label').classList.remove('invalid'); e.target.setAttribute('aria-invalid', 'false'); if (!form.querySelector('[aria-invalid="true"]')) msg.hidden = true } });
 })();

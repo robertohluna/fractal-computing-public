@@ -18,6 +18,89 @@ function animCaptions (prefix, phases) {
     cap.appendChild(g);
   });
 }
+/* animSegments splits a loop's progress bar into one segment per step; clicking a
+   segment shows that step, paused, the same as clicking the step in the list below.
+   animTrail keeps a short tail behind a token moving along an arrow, so the eye can
+   follow where the work is going. */
+function animSegments (prefix, phases, T, seek) {
+  var prog = document.getElementById(prefix + '-fill').parentNode, segs = document.createElement('div');
+  segs.className = 'anim-segs';
+  phases.forEach(function(p, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.tabIndex = -1; b.title = 'Step ' + (i + 1);
+    b.style.setProperty('--w', ((p.t1 - p.t0) / T).toFixed(4));
+    b.addEventListener('click', function(){ seek(i) });
+    segs.appendChild(b);
+  });
+  prog.appendChild(segs);
+}
+function animTrail (svg, before, kind) {
+  var pl = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+  pl.setAttribute('class', 'd-trail ' + kind + ' anim-off');
+  svg.insertBefore(pl, before);
+  return {
+    show: function (path, at) {                                        // tail from 70px behind the token to the token
+      var pts = [], from = Math.max(0, at - 70);
+      for (var k = 0; k <= 8; k++) { var q = path.getPointAtLength(from + (at - from) * k / 8); pts.push(q.x.toFixed(1) + ',' + q.y.toFixed(1)) }
+      pl.setAttribute('points', pts.join(' '));
+      pl.classList.remove('anim-off');
+    },
+    hide: function () { pl.classList.add('anim-off') }
+  };
+}
+/* Story mode, on wide screens: each diagram becomes a stage. Its steps are set out in a
+   column beside it (the page's own step list, or the loop's captions when it has none),
+   the diagram stays pinned while they scroll past, and the step in the middle of the
+   screen is the one the diagram plays, looping that step until the reader moves on.
+   Narrow screens, print and readers without scripts keep the diagram with its controls
+   and the step list below it. opts: {prefix, phases, items (elements, one per phase, or
+   null to build them from the captions), hide (elements to hide once the items have
+   moved), setSeg(i)}. */
+var STORY = window.matchMedia && window.matchMedia('(min-width: 1000px)').matches;
+function animStory (o) {
+  if (!STORY) return false;
+  var dia = document.getElementById(o.prefix + '-play').closest('.diagram');
+  var stage = document.createElement('div'), pin = document.createElement('div'), list = document.createElement('ol');
+  stage.className = 'story-stage'; pin.className = 'stage-pin'; list.className = 'steps story-steps';
+  dia.parentNode.insertBefore(stage, dia);
+  pin.appendChild(dia); stage.appendChild(list); stage.appendChild(pin);
+  var items = o.items || o.phases.map(function(p, i){
+    var li = document.createElement('li'), n = document.createElement('span');
+    n.className = 'n'; n.textContent = i + 1; li.appendChild(n); li.appendChild(document.createTextNode(p.text));
+    return li;
+  });
+  items.forEach(function(li, i){
+    if (!li.querySelector('.n')) { var n = document.createElement('span'); n.className = 'n'; n.textContent = i + 1; li.insertBefore(n, li.firstChild) }
+    li.tabIndex = 0; list.appendChild(li);
+    function go () { li.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'}) }
+    li.addEventListener('click', go);
+    li.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go() } });
+  });
+  (o.hide || []).forEach(function(el){ el.hidden = true });
+  stage.closest('section').classList.add('has-story');
+  var cur = -1;
+  function update () {
+    var mid = window.innerHeight * .55, k = 0;
+    items.forEach(function(li, i){ if (li.getBoundingClientRect().top <= mid) k = i });
+    if (k === cur) return;
+    cur = k;
+    items.forEach(function(li, i){ li.classList.toggle('active', i === k) });
+    o.setSeg(k);
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function(){ if (!ticking) { ticking = true; requestAnimationFrame(function(){ ticking = false; update() }) } }, {passive: true});
+  update();
+  return true;
+}
+/* The clock of a loop, in normal mode (the whole loop) or story mode (one step, held for
+   a beat at its end, then again). */
+function animAdvance (t, dt, T, phases, seg) {
+  if (seg === null) return (t + dt) % T;
+  var p = phases[seg]; t += dt;
+  return (t < p.t0 || t >= p.t1 + 1100) ? p.t0 : t;
+}
+function animShown (t, phases, seg) { return seg === null ? t : Math.min(t, phases[seg].t1 - 1) }
+
 function animOnScreen (prefix) {
   var view = {on: true}, box = document.getElementById(prefix + '-play').closest('.diagram');
   if (window.IntersectionObserver)
@@ -34,16 +117,17 @@ function animOnScreen (prefix) {
 (function(){
   var NS = 'http://www.w3.org/2000/svg', $ = function(id){ return document.getElementById(id) };
   var T  = 14000;                                                      // loop length, ms
+  if (!$('mesh-grid')) return;                                         // the page now shows the architecture as the 3D scene (_site.js)
 
   // ---- instances
   var grid = $('mesh-grid'), conv = $('converge'), insts = [];
   for (var r = 0; r < 6; r++) for (var c = 0; c < 5; c++) {
-    var x = 742 + c*48, y = 104 + r*42;
-    var box  = el('rect', {'class':'d-inst',      x:x,   y:y,    width:36, height:30, rx:4});
+    var x = 742 + c*48, y = 104 + r*42, hue = ' v' + (1 + Math.min(4, Math.floor((c + r) / 2)));   // the logo's colours, in a diagonal band
+    var box  = el('rect', {'class':'d-inst' + hue, x:x,   y:y,    width:36, height:30, rx:3});
     var bar  = el('rect', {'class':'d-inst-bar',  x:x+6, y:y+19, width:24, height:5,  rx:1.5});
-    var prog = el('rect', {'class':'d-inst-prog', x:x+6, y:y+8,  width:0,  height:5,  rx:1.5});
+    var prog = el('rect', {'class':'d-inst-prog' + hue, x:x+6, y:y+8,  width:0,  height:5,  rx:1.5});
     grid.appendChild(box); grid.appendChild(bar); grid.appendChild(prog);
-    var dot = el('circle', {'class':'d-conv anim-off', r:3.5});
+    var dot = el('circle', {'class':'d-conv anim-off', r:3});
     conv.appendChild(dot);
     insts.push({box:box, prog:prog, dot:dot, cx:x+18, cy:y+15,
                 litAt: 4600 + c*170 + r*45,                            // wave spreads from the App's entry point
@@ -64,7 +148,9 @@ function animOnScreen (prefix) {
   var trips = [['tok-intent','a1',200,1400], ['tok-app','a2',2500,3400], ['tok-app','a3',3500,4600],
                ['tok-res','a4',8150,9000],   ['tok-res','a5',9100,10100], ['tok-sum','a6',11100,12100]];
   var toks  = ['tok-intent','tok-app','tok-res','tok-sum'];
-  var stepLis = document.querySelectorAll('.steps li[data-step]');
+  var svg1 = grid.ownerSVGElement, trails = {};
+  toks.forEach(function(id){ trails[id] = animTrail(svg1, $('converge'), (id === 'tok-res' || id === 'tok-sum') ? 'back' : 'out') });
+  var stepLis = document.querySelectorAll('.steps li[data-step]'), storyOn = false;
   var MESH_EXIT = {x:720, y:345};                                      // where results leave the mesh (arrow 4)
 
   function between (t, a, b) { return t >= a && t < b }
@@ -79,11 +165,12 @@ function animOnScreen (prefix) {
     var shown = {};
     trips.forEach(function(tr){
       if (!between(t, tr[2], tr[3])) return;
-      var path = $(tr[1]), pt = path.getPointAtLength(path.getTotalLength() * ease((t - tr[2]) / (tr[3] - tr[2])));
+      var path = $(tr[1]), at = path.getTotalLength() * ease((t - tr[2]) / (tr[3] - tr[2])), pt = path.getPointAtLength(at);
       $(tr[0]).setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
+      trails[tr[0]].show(path, at);
       shown[tr[0]] = true;
     });
-    toks.forEach(function(id){ cls(id, 'anim-off', !shown[id]) });
+    toks.forEach(function(id){ cls(id, 'anim-off', !shown[id]); if (!shown[id]) trails[id].hide() });
 
     // nodes
     cls('n-user', 'hl',      between(t, 0, 400) || t >= 12100);
@@ -118,11 +205,13 @@ function animOnScreen (prefix) {
   animCaptions('anim', phases); var view = animOnScreen('anim');
   var reduce  = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var playing = !reduce, t = reduce ? phases[0].show : 0, last = null;
+  var seg = null;
   function frame (now) {
-    if (playing && view.on) { if (last !== null) t = (t + (now - last)) % T; last = now; render(t) }
+    if (playing && view.on) { if (last !== null) t = animAdvance(t, now - last, T, phases, seg); last = now; render(animShown(t, phases, seg)) }
     else last = null;                                                  // off-screen or paused: hold the frame
     requestAnimationFrame(frame);
   }
+  function setSeg (i) { seg = i; t = phases[i].t0; if (!playing) render(phases[i].show) }
   function setPlaying (on) {
     playing = on; last = null;
     $('anim-play').textContent = on ? 'Pause' : 'Play';
@@ -130,12 +219,14 @@ function animOnScreen (prefix) {
   }
   $('anim-play').addEventListener('click', function(){ setPlaying(!playing) });
   $('anim-restart').addEventListener('click', function(){ t = 0; render(t); setPlaying(true) });
+  animSegments('anim', phases, T, function(i){ t = phases[i].show; setPlaying(false); render(t) });
   stepLis.forEach(function(li){                                        // clicking a step shows that step, paused
-    function go () { t = phases[+li.dataset.step - 1].show; setPlaying(false); render(t) }
+    function go () { if (storyOn) return; t = phases[+li.dataset.step - 1].show; setPlaying(false); render(t) }
     li.addEventListener('click', go);
     li.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go() } });
   });
   setPlaying(playing); render(t); requestAnimationFrame(frame);
+  if (animStory({prefix: 'anim', phases: phases, items: Array.prototype.slice.call(stepLis), setSeg: setSeg})) storyOn = true;
 })();
 
 /* "A single Fractal" diagram animation. Like the architecture diagram, one loop
@@ -160,7 +251,7 @@ function animOnScreen (prefix) {
     var x = 30 + c*36, y = 76 + r*28, g = el('g', {'class':'eco-g'}, eco);
     el('rect', {'class':'eco-cell', x:x, y:y, width:33, height:24, rx:3}, g);
     el('text', {'class':'eco-t', x:x+16.5, y:y+15, 'text-anchor':'middle'}, g).textContent = labels[r*6 + c];
-    ecoCells.push({g:g, fadeAt: 300 + ((r*6 + c) * 37 % 54) * 40});    // fade in a scattered order
+    ecoCells.push({g:g, cx:x+16.5, cy:y+12, fadeAt: 300 + ((r*6 + c) * 37 % 54) * 40});    // fade in a scattered order
   }
 
   // ---- stack layers build bottom-up
@@ -194,7 +285,11 @@ function animOnScreen (prefix) {
 
   function render (t) {
     var step = phases.filter(function(p){ return t >= p.t0 && t < p.t1 })[0] || phases[3], si = phases.indexOf(step);
-    ecoCells.forEach(function(c){ c.g.style.opacity = 1 - .7 * clamp01((t - c.fadeAt) / 500) });
+    ecoCells.forEach(function(c){
+      var k = ease(clamp01((t - c.fadeAt) / 700)), dx = (330 - c.cx) * .32 * k, dy = (210 - c.cy) * .18 * k, sc = 1 - .35 * k;
+      c.g.style.opacity = 1 - .7 * k;
+      c.g.setAttribute('transform', 'translate(' + (c.cx + dx) + ',' + (c.cy + dy) + ') scale(' + sc + ') translate(' + (-c.cx) + ',' + (-c.cy) + ')');
+    });
     layers.forEach(function(l){                                         // bottom layer (data-i 7) first
       var at = 600 + (7 - +l.dataset.i) * 260;
       l.style.opacity = clamp01((t - at) / 300);
@@ -210,13 +305,16 @@ function animOnScreen (prefix) {
   }
 
   animCaptions('anim2', phases); var view = animOnScreen('anim2');
+  animSegments('anim2', phases, T, function(i){ t = phases[i].show; setPlaying(false); render(t) });
   var reduce  = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var playing = !reduce, t = reduce ? phases[3].show : 0, last = null;
+  var seg = null;
   function frame (now) {
-    if (playing && view.on) { if (last !== null) t = (t + (now - last)) % T; last = now; render(t) }
+    if (playing && view.on) { if (last !== null) t = animAdvance(t, now - last, T, phases, seg); last = now; render(animShown(t, phases, seg)) }
     else last = null;                                                  // off-screen or paused: hold the frame
     requestAnimationFrame(frame);
   }
+  function setSeg (i) { seg = i; t = phases[i].t0; if (!playing) render(phases[i].show) }
   function setPlaying (on) {
     playing = on; last = null;
     $('anim2-play').textContent = on ? 'Pause' : 'Play';
@@ -225,6 +323,7 @@ function animOnScreen (prefix) {
   $('anim2-play').addEventListener('click', function(){ setPlaying(!playing) });
   $('anim2-restart').addEventListener('click', function(){ t = 0; render(t); setPlaying(true) });
   setPlaying(playing); render(t); requestAnimationFrame(frame);
+  animStory({prefix: 'anim2', phases: phases, items: null, setSeg: setSeg});
 })();
 
 /* 90-day proof-of-concept animation. A day cursor sweeps days 1-90 and then
@@ -269,7 +368,7 @@ function animOnScreen (prefix) {
     {t0:1450, t1:6050,  show:4500,  text:'Days 15–60: AI-generated Fractal Apps run on the twin in parallel with production, and metrics accumulate daily.'},
     {t0:6050, t1:9050,  show:8000,  text:'Days 61–90: results are compared with the production baseline, and the client decides on the transition using measured data.'},
     {t0:9050, t1:T,     show:11000, text:'After day 90: workloads move on the client’s timeline. There is no hard cutover; legacy systems stay available.'}];
-  var lis = document.querySelectorAll('#start li[data-phase]');
+  var lis = document.querySelectorAll('#start li[data-phase]'), storyOn = false;
 
   function render (t) {
     var day = Math.min(t / MS_PER_DAY, 90), after = t > 9050;
@@ -292,13 +391,16 @@ function animOnScreen (prefix) {
   }
 
   animCaptions('anim3', phases); var view = animOnScreen('anim3');
+  animSegments('anim3', phases, T, function(i){ t = phases[i].show; setPlaying(false); render(t) });
   var reduce  = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var playing = !reduce, t = reduce ? phases[3].show : 0, last = null;
+  var seg = null;
   function frame (now) {
-    if (playing && view.on) { if (last !== null) t = (t + (now - last)) % T; last = now; render(t) }
+    if (playing && view.on) { if (last !== null) t = animAdvance(t, now - last, T, phases, seg); last = now; render(animShown(t, phases, seg)) }
     else last = null;                                                  // off-screen or paused: hold the frame
     requestAnimationFrame(frame);
   }
+  function setSeg (i) { seg = i; t = phases[i].t0; if (!playing) render(phases[i].show) }
   function setPlaying (on) {
     playing = on; last = null;
     $('anim3-play').textContent = on ? 'Pause' : 'Play';
@@ -307,11 +409,12 @@ function animOnScreen (prefix) {
   $('anim3-play').addEventListener('click', function(){ setPlaying(!playing) });
   $('anim3-restart').addEventListener('click', function(){ t = 0; render(t); setPlaying(true) });
   lis.forEach(function(li){                                            // clicking a phase shows it, paused
-    function go () { t = phases[+li.dataset.phase - 1].show; setPlaying(false); render(t) }
+    function go () { if (storyOn) return; t = phases[+li.dataset.phase - 1].show; setPlaying(false); render(t) }
     li.addEventListener('click', go);
     li.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go() } });
   });
   setPlaying(playing); render(t); requestAnimationFrame(frame);
+  if (animStory({prefix: 'anim3', phases: phases, items: Array.prototype.slice.call(lis), hide: [document.querySelector('#start .poc-list')], setSeg: setSeg})) storyOn = true;
 })();
 
 /* Locality pipeline animation (14 s loop, render(t) draws any moment).
@@ -392,13 +495,16 @@ function animOnScreen (prefix) {
   }
 
   animCaptions('anim4', phases); var view = animOnScreen('anim4');
+  animSegments('anim4', phases, T, function(i){ t = phases[i].show; setPlaying(false); render(t) });
   var reduce  = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var playing = !reduce, t = reduce ? phases[1].show : 0, last = null;
+  var seg = null;
   function frame (now) {
-    if (playing && view.on) { if (last !== null) t = (t + (now - last)) % T; last = now; render(t) }
+    if (playing && view.on) { if (last !== null) t = animAdvance(t, now - last, T, phases, seg); last = now; render(animShown(t, phases, seg)) }
     else last = null;                                                  // off-screen or paused: hold the frame
     requestAnimationFrame(frame);
   }
+  function setSeg (i) { seg = i; t = phases[i].t0; if (!playing) render(phases[i].show) }
   function setPlaying (on) {
     playing = on; last = null;
     $('anim4-play').textContent = on ? 'Pause' : 'Play';
@@ -407,4 +513,5 @@ function animOnScreen (prefix) {
   $('anim4-play').addEventListener('click', function(){ setPlaying(!playing) });
   $('anim4-restart').addEventListener('click', function(){ t = 0; render(t); setPlaying(true) });
   setPlaying(playing); render(t); requestAnimationFrame(frame);
+  animStory({prefix: 'anim4', phases: phases, items: null, setSeg: setSeg});
 })();

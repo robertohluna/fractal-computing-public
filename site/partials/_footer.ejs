@@ -1,17 +1,71 @@
-<%# Site footer and end of document. -%>
+<%# Site footer and end of document: the brand and the way in across the top, then the site's
+    pages (platform and company, as in the navigation, with the ways to get started) and the industry sites (each named for its industry, with its address) in one ruled
+    grid, a band of the logo's voxels (drawn by _site.js), and the legal line. Styles in
+    style_site.css (footer section). -%>
+<%  const platform = [['/why','Why Fractal'], ['/how','How It Works'], ['/benchmarks','Benchmarks'], ['/markets','Markets']]
+    const company  = [['/working','Collaborate'], ['/about','About'], ['/contact','Contact us']]
+    const sites = [['https://cre.fractal-computing.com','Commercial Real Estate','cre.fractal-computing.com'],
+                   ['https://defense.fractal-computing.com','Defense','defense.fractal-computing.com'],
+                   ['https://gov.fractal-computing.com','Government','gov.fractal-computing.com'],
+                   ['https://healthcare.fractal-computing.com','Healthcare','healthcare.fractal-computing.com'],
+                   ['https://reconcile.fractal-computing.com','Fraud Prevention','reconcile.fractal-computing.com'],
+                   ['https://sustainable.fractal-computing.com','Sustainability','sustainable.fractal-computing.com'],
+                   ['https://utility.fractal-computing.com','Utilities','utility.fractal-computing.com']] -%>
 <footer class="site-foot">
   <div class="wrap">
-    <div>© 2020–<%= new Date().getFullYear() %> FractalWeb, LLC. All rights reserved.</div>
-    <nav aria-label="Footer">
-      <a href="https://fractal-computing.com"             target="_blank" rel="noopener" title="Fractal Computing"     > fractal-computing.com             </a>
-      <a href="https://cre.fractal-computing.com"         target="_blank" rel="noopener" title="Commercial Real Estate"> cre.Fractal-Computing.com         </a>
-      <a href="https://defense.fractal-computing.com"     target="_blank" rel="noopener" title="Defense"               > defense.Fractal-Computing.com     </a>
-      <a href="https://gov.fractal-computing.com"         target="_blank" rel="noopener" title="Government"            > gov.Fractal-Computing.com         </a>
-      <a href="https://healthcare.fractal-computing.com"  target="_blank" rel="noopener" title="Healthcare"            > healthcare.Fractal-Computing.com  </a>
-      <a href="https://reconcile.fractal-computing.com"   target="_blank" rel="noopener" title="Fraud Prevention"      > reconcile.Fractal-Computing.com   </a>
-      <a href="https://sustainable.fractal-computing.com" target="_blank" rel="noopener" title="Sustainability"        > sustainable.Fractal-Computing.com </a>
-      <a href="https://utility.fractal-computing.com"     target="_blank" rel="noopener" title="Utilities"             > utility.Fractal-Computing.com     </a>
-    </nav>
+    <div class="foot-brand">
+      <a class="foot-logo" href="/" aria-label="Fractal Computing home">
+        <img class="logo-l" src="/apps/images/fLogo-name-transparent.png"       alt="Fractal" width="1821" height="1002">
+        <img class="logo-d" src="/apps/images/fLogo-name-white-transparent.png" alt="Fractal" width="1821" height="1002">
+      </a>
+      <div class="foot-pitch">
+        <p class="foot-claim">The data and computing foundation for enterprise AI</p>
+        <p>Add AI to your enterprise applications safely, while making them faster and token costs immaterial.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="/contact">Schedule a call →</a>
+        <a class="btn btn-ghost" href="/how">How it works →</a>
+      </div>
+    </div>
+    <div class="foot-cols">
+      <nav class="foot-col" aria-label="Platform">
+        <h2>Platform</h2>
+        <ul>
+<% platform.forEach(function(p){ -%>
+          <li><a href="<%= p[0] %>"><%= p[1] %></a></li>
+<% }) -%>
+        </ul>
+      </nav>
+      <nav class="foot-col" aria-label="Company">
+        <h2>Company</h2>
+        <ul>
+<% company.forEach(function(p){ -%>
+          <li><a href="<%= p[0] %>"><%= p[1] %></a></li>
+<% }) -%>
+        </ul>
+        <h2 class="foot-h2-next">Get started</h2>
+        <ul>
+          <li><a href="/how#start">The 90-day proof of concept</a></li>
+          <li><a href="/markets">Solutions by industry</a></li>
+          <li><a href="/contact">Schedule a call</a></li>
+        </ul>
+      </nav>
+      <nav class="foot-col foot-sites" aria-label="Industry sites">
+        <h2>Industry sites</h2>
+        <ul>
+<% sites.forEach(function(x){ -%>
+          <li><a href="<%= x[0] %>" target="_blank" rel="noopener"><b><%= x[1] %><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h5v5M8.6 3.4L3 9"/></svg></b><span><%= x[2] %></span></a></li>
+<% }) -%>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <canvas class="foot-field" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="foot-legal">
+      <div>© 2020–<%= new Date().getFullYear() %> FractalWeb, LLC. All rights reserved.</div>
+      <a href="https://fractal-computing.com" target="_blank" rel="noopener">fractal-computing.com</a>
+    </div>
   </div>
 </footer>
 </body>
