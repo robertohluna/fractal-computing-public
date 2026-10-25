@@ -510,11 +510,11 @@ section.has-story .diagram{background-color:var(--bg)}
 .story-stage .anim-prog{margin-top:0}
 .steps.story-steps{grid-column:1;grid-row:1;display:block;background:none;border:0;border-radius:0;overflow:visible;padding:4vh 0 22vh}
 .steps.story-steps > *,.explorer.ready .ex-panels > *{box-shadow:none;margin:0}
-.steps.story-steps li{position:relative;display:block;padding:16vh 0 16vh 48px;background:none;font-size:18px;line-height:1.55;color:var(--ink-3);cursor:pointer;transition:color .4s}
+.steps.story-steps li{position:relative;display:block;padding:10vh 0 10vh 48px;background:none;font-size:18px;line-height:1.55;color:var(--ink-3);cursor:pointer;transition:color .4s}
 .steps.story-steps li b{color:var(--ink-2);transition:color .4s}
-.steps.story-steps li .n{top:calc(16vh + 2px);width:24px;height:24px;line-height:22px;transition:background .4s,color .4s,border-color .4s}
+.steps.story-steps li .n{top:calc(10vh + 2px);width:24px;height:24px;line-height:22px;transition:background .4s,color .4s,border-color .4s}
 .steps.story-steps li::before{content:"";position:absolute;left:11px;top:0;bottom:0;width:1px;background:var(--rule)}
-.steps.story-steps li:first-child::before{top:16vh} .steps.story-steps li:last-child::before{bottom:calc(100% - 16vh - 14px)}
+.steps.story-steps li:first-child::before{top:10vh} .steps.story-steps li:last-child::before{bottom:calc(100% - 10vh - 14px)}
 .steps.story-steps li .n{z-index:1;background:var(--surface)}
 .steps.story-steps li.active{color:var(--ink);background:none}
 .steps.story-steps li.active b{color:var(--ink)}

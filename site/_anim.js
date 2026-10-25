@@ -48,18 +48,18 @@ function animTrail (svg, before, kind) {
     hide: function () { pl.classList.add('anim-off') }
   };
 }
-/* Story mode, on wide screens: each diagram becomes a stage. Its steps are set out in a
-   column beside it (the page's own step list, or the loop's captions when it has none),
-   the diagram stays pinned while they scroll past, and the step in the middle of the
-   screen is the one the diagram plays, looping that step until the reader moves on.
-   Narrow screens, print and readers without scripts keep the diagram with its controls
-   and the step list below it. opts: {prefix, phases, items (elements, one per phase, or
-   null to build them from the captions), hide (elements to hide once the items have
-   moved), setSeg(i)}. */
+/* Story mode, on wide screens, for a diagram marked data-story (the architecture diagram):
+   the diagram becomes a stage. Its steps are set out in a column beside it (the page's own
+   step list, or the loop's captions when it has none), the diagram stays pinned while they
+   scroll past, and the step in the middle of the screen is the one the diagram plays,
+   looping that step until the reader moves on. Other diagrams, narrow screens, print and
+   readers without scripts keep the diagram with its controls and the step list below it.
+   opts: {prefix, phases, items (elements, one per phase, or null to build them from the
+   captions), hide (elements to hide once the items have moved), setSeg(i)}. */
 var STORY = window.matchMedia && window.matchMedia('(min-width: 1000px)').matches;
 function animStory (o) {
-  if (!STORY) return false;
   var dia = document.getElementById(o.prefix + '-play').closest('.diagram');
+  if (!STORY || !dia.hasAttribute('data-story')) return false;
   var stage = document.createElement('div'), pin = document.createElement('div'), list = document.createElement('ol');
   stage.className = 'story-stage'; pin.className = 'stage-pin'; list.className = 'steps story-steps';
   dia.parentNode.insertBefore(stage, dia);

@@ -8,39 +8,48 @@
   <p class="lede">Language models are good at understanding what people want and at explaining results. They are slow, costly and non-deterministic when asked to process an enterprise's data. In Fractal's architecture the model does only the first and last steps. Fractal does the heavy lifting in between: it stores a digital twin of the systems of record and runs the work in parallel across many small instances on commodity hardware.</p>
 </header>
   <nav class="toc local" aria-label="Contents">
+    <a href="#architecture">Overview</a>
+    <a href="#ai-edges">The model</a>
+    <a href="#heavy-lifting">The data</a>
+    <a href="#deterministic">The instances</a>
+    <a href="#locality">Speed</a>
+    <a href="#tokens">Cost</a>
     <a href="#summary">Summary</a>
-    <a href="#architecture">Architecture</a>
-    <a href="#ai-edges">AI at the edges</a>
-    <a href="#heavy-lifting">Digital twin</a>
-    <a href="#deterministic">Deterministic AI</a>
-    <a href="#locality">Locality</a>
-    <a href="#tokens">Token costs</a>
-    <a href="#start">Getting started</a>
+    <a href="#start">Adoption</a>
     <a class="companion" href="/why">The business case →</a>
   </nav>
 
 
-<!-- ============ SUMMARY: the bottom line first ============ -->
-<section id="summary">
-  <h2>Summary</h2>
-  <div class="bluf">
-    <p>Most Enterprise AI designs put the language model in the middle of the work. The model reads the data, reasons over it and writes the results. That is expensive, because every record becomes tokens. It is slow, because the model sits on top of the conventional database stack. It is also risky, because a non-deterministic model with write access to production can corrupt millions of records at once.</p>
-    <p>Fractal changes where the model sits. <strong>AI is used only at the beginning and the end of the workflow.</strong> At the beginning, the model turns the user's request into a <strong>Fractal App</strong>: a small, bounded program. At the end, it turns the App's results into an executive summary. <strong>Fractal is the distributed computing and storage layer in between.</strong> It holds a continuously synchronized digital twin of the systems of record, runs the Application in parallel on every Fractal instance, and returns the results.</p>
-    <p>The outcome is AI with the flexibility of a language model and the <strong>deterministic behavior of enterprise software</strong>. The systems of record cannot be corrupted, performance improves by orders of magnitude on inexpensive hardware, and language-model token costs become immaterial.</p>
+<!-- ============ ARCHITECTURE ============ -->
+<%# How It Works follows the architecture picture: the overview (the cube, drawn by _site.js voxelSystem; the scroll
+    picks the step and the cube plays each change at its own pace), then its three parts (the model, the data, the
+    instances), then what they give (speed, cost), the summary and adoption. Each chapter's kicker names its role and
+    matches the contents bar. -%>
+<section id="architecture">
+  <div class="sys">
+    <div class="sys-head">
+      <p class="kicker">Overview</p>
+      <h2>The architecture</h2>
+      <p class="lead">The user talks to the AI language model. The model writes a Fractal App, which the Fractal mesh runs in parallel against its local copy of the enterprise's data. The results go back to the model, which summarizes them for the user.</p>
+    </div>
+    <div class="sys-visual"><canvas class="voxel-sys" aria-hidden="true"></canvas></div>
+    <ol class="sys-steps">
+      <li data-beat="src"><b>Fractal replicates data from the systems of record into a digital twin.</b><span>Data flows from source to twin only. There is no return path, so nothing an Application does can reach a system of record that way.</span></li>
+      <li data-beat="twin"><b>The twin is a live, full-fidelity replica.</b><span>It is continuously synchronized: not a backup, snapshot or stale staging copy.</span></li>
+      <li data-beat="mesh"><b>Each Fractal instance holds one shard of the twin.</b><span>Every instance is the same small, self-contained stack. The data is spread across the mesh, not concentrated in one database.</span></li>
+      <li data-beat="run"><b>The language model writes a Fractal App, and every instance runs it in parallel.</b><span>The user states what they want in plain language, for example: "Which customers were overbilled last quarter, and by how much?" The App is a small program that works on one data shard, inside a bounded context.</span></li>
+      <li data-beat="results"><b>The results go back to the language model.</b><span>A compact, structured answer, not the underlying data. The model summarizes and presents it to the user as an executive summary they can act on.</span></li>
+    </ol>
   </div>
-  <p class="xref"><span class="xl">Business case</span> <a href="/why">The decision, in business terms →</a></p>
 </section>
 
 
-<!-- ============ ARCHITECTURE ============ -->
-<%# The architecture diagram, animated by _anim.js. On wide screens it is a scroll story: the diagram
-    stays pinned while the six steps scroll past, and the step in the middle of the screen is the one it plays.
-    Narrower, the diagram plays with its controls and the steps follow it. -%>
-<section id="architecture">
-  <h2>The architecture</h2>
-  <p class="intro">The user talks to the AI language model. The model writes a Fractal App, which the Fractal mesh runs in parallel against its local copy of the enterprise's data. The results go back to the model, which summarizes them for the user.</p>
-
-  <div class="diagram">
+<!-- ============ THE MODEL: steps 1, 2, 5 and 6, the architecture diagram as a scroll story ============ -->
+<section id="ai-edges">
+  <p class="kicker">The model</p>
+  <h2>AI at the beginning and end of the workflow</h2>
+  <p class="intro">Language models are good at two things this architecture needs: understanding loosely stated requests, and explaining structured results in plain language. Fractal uses them for exactly those two steps and nothing else.</p>
+  <div class="diagram" data-story>
   <svg viewBox="0 0 1000 540" role="img" aria-labelledby="dgm-title dgm-desc">
     <title id="dgm-title">Enterprise AI application with Fractal as the computing and storage layer</title>
     <desc id="dgm-desc">A user tells an AI language model what they want. The model writes a Fractal App, which is deployed to the Fractal Computing mesh and runs in parallel on every Fractal instance. Results return to the model, which summarizes them for the user. Systems of record feed the mesh by one-way sync, forming a digital twin.</desc>
@@ -155,13 +164,6 @@
     <li data-step="5" tabindex="0"><span class="n back">5</span><b>The results go back to the language model</b>: a compact, structured answer, not the underlying data.</li>
     <li data-step="6" tabindex="0"><span class="n back">6</span><b>The model summarizes and presents the result</b> to the user as an executive summary they can act on.</li>
   </ol>
-</section>
-
-
-<!-- ============ AI AT THE EDGES: steps 1, 2, 5 and 6 of the architecture ============ -->
-<section id="ai-edges">
-  <h2>AI at the beginning and end of the workflow</h2>
-  <p class="intro">Language models are good at two things this architecture needs: understanding loosely stated requests, and explaining structured results in plain language. Fractal uses them for exactly those two steps and nothing else.</p>
   <div class="cols">
     <div>
       <h4>At the beginning: capturing intent</h4>
@@ -187,6 +189,7 @@
 
 <!-- ============ HEAVY LIFTING ============ -->
 <section id="heavy-lifting">
+  <p class="kicker">The data</p>
   <h2>Fractal does the heavy lifting, on a digital twin</h2>
   <p class="intro">All of the application's actual work, including storing the data, processing it and producing results, happens in the Fractal Computing mesh. The mesh works on a digital twin of the systems of record, never on the systems of record themselves.</p>
   <ul class="apps">
@@ -203,6 +206,7 @@
 
 <!-- ============ SCALE INVARIANCE AND DETERMINISTIC AI ============ -->
 <section id="deterministic">
+  <p class="kicker">The instances</p>
   <h2>Scale invariance and Deterministic AI</h2>
   <p class="intro">Fractal's architecture is <strong>scale invariant</strong>. Every Fractal instance is the same small, self-contained stack: application code, middleware, web server, shard and partition manager, database scheme library, multi-model database and stream processor. Scale comes only from the number of instances, from one on a smartphone to 1,000+ on a large server. An Application written for one instance runs unchanged on all of them.</p>
 
@@ -306,6 +310,7 @@
 
 <!-- ============ LOCALITY OF REFERENCE ============ -->
 <section id="locality">
+  <p class="kicker">Speed</p>
   <h2>Locality of Reference: fast on commodity hardware</h2>
   <p class="intro">Conventional enterprise software spends most of its time waiting on I/O. Each abstraction boundary (application, ORM, connection pool, network stack, database server, storage engine, disk) adds roughly 10 I/O wait states per useful instruction cycle. With seven boundaries, software runs about 10<sup>7</sup> below what the hardware can do. Fractal's <strong>Locality Optimization™</strong> removes that waste.</p>
   <div class="diagram">
@@ -382,6 +387,7 @@
 
 <!-- ============ TOKENS ============ -->
 <section id="tokens">
+  <p class="kicker">Cost</p>
   <h2>Token costs go from a large expense to an immaterial one</h2>
   <p class="intro">When a language model processes enterprise data itself, token usage grows with the amount of data: every record the model reads costs tokens. In Fractal's architecture the model handles only the request, the App and the results. Token usage then depends on how complex the question is, not on how much data is behind it.</p>
   <div class="tbl-wrap">
@@ -401,8 +407,21 @@
 </section>
 
 
+<!-- ============ SUMMARY: the takeaways, before adoption ============ -->
+<section id="summary">
+  <h2>Summary</h2>
+  <div class="bluf">
+    <p>Most Enterprise AI designs put the language model in the middle of the work. The model reads the data, reasons over it and writes the results. That is expensive, because every record becomes tokens. It is slow, because the model sits on top of the conventional database stack. It is also risky, because a non-deterministic model with write access to production can corrupt millions of records at once.</p>
+    <p>Fractal changes where the model sits. <strong>AI is used only at the beginning and the end of the workflow.</strong> At the beginning, the model turns the user's request into a <strong>Fractal App</strong>: a small, bounded program. At the end, it turns the App's results into an executive summary. <strong>Fractal is the distributed computing and storage layer in between.</strong> It holds a continuously synchronized digital twin of the systems of record, runs the Application in parallel on every Fractal instance, and returns the results.</p>
+    <p>The outcome is AI with the flexibility of a language model and the <strong>deterministic behavior of enterprise software</strong>. The systems of record cannot be corrupted, performance improves by orders of magnitude on inexpensive hardware, and language-model token costs become immaterial.</p>
+  </div>
+  <p class="xref"><span class="xl">Business case</span> <a href="/why">The decision, in business terms →</a></p>
+</section>
+
+
 <!-- ============ START ============ -->
 <section id="start">
+  <p class="kicker">Adoption</p>
   <h2>Getting started: a 90‑day parallel proof of concept</h2>
   <p class="intro">Fractal deployments start with a 90‑day proof of concept that runs alongside existing systems. The systems of record keep running unchanged. The Fractal twin and the AI layer are built in parallel and measured against live production data.</p>
   <div class="diagram">
