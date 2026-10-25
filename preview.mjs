@@ -28,7 +28,7 @@ const PAGES = {                                                                 
 const TYPES = {'.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.mp4': 'video/mp4', '.ico': 'image/x-icon', '.woff2': 'font/woff2'}
 
 async function render (res, file, env={}) {
-    let html = await ejs.renderFile(path.join(SITE, file), {env: {nonce: '', ...env}, argv: {}})
+    let html = await ejs.renderFile(path.join(SITE, file), {env: {nonce: '', site: process.env.SITE_URL, ...env}, argv: {}})   // SITE_URL: this copy's public address, for shared links (partials/_head.ejs)
     res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'}).end(html)
 }
 
@@ -53,7 +53,10 @@ async function handle (req, res) {
 	}
     }
 
-    res.writeHead(404, {'Content-Type': 'text/plain'}).end(`Not in this copy of the site: ${url}`)   // eg. /working/nda: the agreements aren't included
+    if (/^\/working\/[^/]+$/.test(url))                                       // the agreements (eg. /working/nda) aren't in this copy: the live site has them
+	return res.writeHead(302, {Location: 'https://fractal-computing.com' + url}).end()
+
+    res.writeHead(404, {'Content-Type': 'text/plain'}).end(`Not in this copy of the site: ${url}`)
 }
 
 http.createServer((req, res) => handle(req, res).catch(e => {

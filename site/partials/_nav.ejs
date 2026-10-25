@@ -1,6 +1,10 @@
-<%# Site navigation. Called as include('partials/_nav', {page}) where page is one of the keys below. -%>
-<%  const items = [['home','/','Home'], ['why','/why','Why Fractal'], ['how','/how','How It Works'], ['benchmarks','/benchmarks','Benchmarks'], ['markets','/markets','Markets'], ['working','/working','Collaborate'], ['about','/about','About']]
-    const cur   = k => (locals.page === k) ? ' aria-current="page"' : '' -%>
+<%# Site navigation. Called as include('partials/_nav', {page}) where page is one of the keys below.
+    The page links sit in one group; Collaborate and About are under Company. The drawer (narrow
+    screens) lists every page. -%>
+<%  const items   = [['why','/why','Why Fractal'], ['how','/how','How It Works'], ['benchmarks','/benchmarks','Benchmarks'], ['markets','/markets','Markets']]
+    const company = [['working','/working','Collaborate'], ['about','/about','About']]
+    const cur     = k => (locals.page === k) ? ' aria-current="page"' : ''
+    const inCompany = company.some(c => c[0] === locals.page) -%>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-nav">
   <div class="wrap">
@@ -12,6 +16,14 @@
 <% items.forEach(function(it){ -%>
       <li><a href="<%= it[1] %>"<%- cur(it[0]) %>><%= it[2] %></a></li>
 <% }) -%>
+      <li class="nav-menu<%= inCompany ? ' current' : '' %>">
+        <button type="button" aria-expanded="false" aria-controls="navCompany">Company <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+        <div class="nav-pop" id="navCompany">
+<% company.forEach(function(it){ -%>
+          <a href="<%= it[1] %>"<%- cur(it[0]) %>><%= it[2] %></a>
+<% }) -%>
+        </div>
+      </li>
     </ul>
     <div class="nav-actions">
       <a class="btn btn-primary btn-sm" href="/contact"<%- cur('contact') %>>Contact us</a>
@@ -20,12 +32,14 @@
         <svg class="i-sun"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       </button>
       <button type="button" class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="navDrawer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <svg class="i-bars" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <svg class="i-x" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
   </div>
   <nav class="nav-drawer" id="navDrawer" aria-label="Site">
-<% items.forEach(function(it){ -%>
+    <a href="/"<%- cur('home') %>>Home</a>
+<% items.concat(company).forEach(function(it){ -%>
     <a href="<%= it[1] %>"<%- cur(it[0]) %>><%= it[2] %></a>
 <% }) -%>
     <a class="btn btn-primary" href="/contact">Contact us</a>

@@ -1,12 +1,22 @@
-<%- include('partials/_head', {title:'About', desc:'Fractal Computing was designed by MIT and Stanford computer scientists around Locality Optimization, and runs in production at Fortune 500 companies in utilities, telecommunications and financial services.'}) %>
+<%- include('partials/_head', {title:'About', desc:'Fractal Computing was designed by MIT and Stanford computer scientists around Locality Optimization, and runs in production at Fortune 500 companies in utilities, telecommunications and financial services.', path:'/about'}) %>
 <body>
 <%- include('partials/_nav', {page:'about'}) %>
 
 <%# About: origin, timeline, production record and talks, from the apps_12.01 About page. -%>
 <main id="main" class="wrap">
 <header class="hero">
-  <h1>Built by MIT and Stanford engineers to make structured-data AI safe</h1>
+  <h1>Built by MIT and Stanford engineers to make structured‑data AI safe</h1>
   <p class="lede">An architecture decades in the making, now running enterprise AI in production at Fortune 500 companies on hardware small enough to hold in one hand.</p>
+  <%# Research origins: the institutions' logos (from Wikimedia Commons: MIT_Logo_and_Wordmark.svg and
+      Stanford_wordmark_(2012).svg; public domain as simple shapes, but trademarks of their owners), drawn
+      in the page's text colour. -%>
+  <div class="creds">
+    <p class="creds-k">Architecture designed by computer scientists from</p>
+    <ul>
+      <li class="logo-mit"><%- include('partials/_logo_mit') %></li>
+      <li class="logo-su"><%- include('partials/_logo_stanford') %></li>
+    </ul>
+  </div>
 </header>
 
 <section id="origin">

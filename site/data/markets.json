@@ -5,7 +5,7 @@
   "icon": "⚡",
   "blurb": "Customer insight, grid management, billing quality assurance, rate modeling, and demand forecasting solutions.",
   "title": "AI Solutions for Electric Utilities",
-  "sub": "18 production-proven solutions for billing, metering, grid management, and customer intelligence — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "18 production-proven solutions for billing, metering, grid management, and customer intelligence, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Billing_Quality_Assurance",
@@ -506,7 +506,7 @@
   "icon": "🔥",
   "blurb": "Billing, meter reading quality assurance, demand forecasting, and rate management solutions.",
   "title": "AI Solutions for Gas Utilities",
-  "sub": "15 production-proven solutions for billing, metering, demand forecasting, and customer intelligence — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "15 production-proven solutions for billing, metering, demand forecasting, and customer intelligence, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Billing_Quality_Assurance",
@@ -924,7 +924,7 @@
   "icon": "💧",
   "blurb": "Leak detection support, billing, meter reading error detection, and forecasting solutions.",
   "title": "AI Solutions for Water Utilities",
-  "sub": "15 production-proven solutions for billing, metering, leak detection support, and demand forecasting — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "15 production-proven solutions for billing, metering, leak detection support, and demand forecasting, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Billing_Quality_Assurance",
@@ -1345,7 +1345,7 @@
   "icon": "📡",
   "blurb": "Customer insight, network SLA monitoring, billing quality, rate modeling, and forecasting solutions.",
   "title": "AI Solutions for Telecommunications",
-  "sub": "11 production-proven solutions for billing quality assurance, rate design, customer insight, and service level monitoring — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "11 production-proven solutions for billing quality assurance, rate design, customer insight, and service level monitoring, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Billing_Quality_Assurance",
@@ -1652,7 +1652,7 @@
   "icon": "📊",
   "blurb": "Large data management and processing, transaction processing, and customer insight solutions.",
   "title": "AI Solutions for Financial Services",
-  "sub": "4 production-proven solutions for data management, customer insight, and contact intelligence — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "4 production-proven solutions for data management, customer insight, and contact intelligence, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Key_Customer_Insight",
@@ -1768,7 +1768,7 @@
   "icon": "🏥",
   "blurb": "Revenue optimization, customer care, billing, and data portal solutions for healthcare organizations.",
   "title": "AI Solutions for Healthcare",
-  "sub": "Revenue optimization, customer insight, contact management, and data access — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "Revenue optimization, customer insight, contact management, and data access, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Key_Customer_Insight",
@@ -1889,7 +1889,7 @@
   "icon": "🛡",
   "blurb": "Fraud detection support, risk analysis, financial forecasting, and customer insight solutions.",
   "title": "AI Solutions for Insurance",
-  "sub": "4 production-proven solutions for customer data management, contact intelligence, and API-driven access — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "4 production-proven solutions for customer data management, contact intelligence, and API-driven access, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Key_Customer_Insight",
@@ -2005,7 +2005,7 @@
   "icon": "🚚",
   "blurb": "Data processing at point of delivery, inventory management, and customer insight solutions.",
   "title": "AI Solutions for Logistics",
-  "sub": "Production-proven solutions for data processing, inventory management, and customer intelligence — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "Production-proven solutions for data processing, inventory management, and customer intelligence, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Key_Customer_Insight",
@@ -2121,7 +2121,7 @@
   "icon": "🛍",
   "blurb": "End-of-day closing, inventory management, customer insight systems, and forecasting solutions.",
   "title": "AI Solutions for Retail",
-  "sub": "Production-proven solutions for customer identification, insight, contact management, and billing — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "Production-proven solutions for customer identification, insight, contact management, and billing, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Key_Customer_Identification",
@@ -2291,7 +2291,7 @@
   "icon": "⛽",
   "blurb": "Large data management and processing, demand forecasting, process management, and machine learning solutions.",
   "title": "AI Solutions for Oil & Gas",
-  "sub": "Production-proven solutions for demand forecasting, service level monitoring, customer management, and data APIs — each running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "Production-proven solutions for demand forecasting, service level monitoring, customer management, and data APIs, each running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [
    {
     "id": "Demand_Forecasting",
@@ -2486,7 +2486,7 @@
   "icon": "🏛",
   "blurb": "Replace legacy applications with lower cost, higher availability, agile modern alternatives.",
   "title": "AI Solutions for Government",
-  "sub": "Production-proven sustainable computing solutions — running as a parallel digital twin with zero risk to your systems of record.",
+  "sub": "Production-proven sustainable computing solutions, running as a parallel digital twin with zero risk to your systems of record.",
   "solutions": [],
   "video": {
    "id": "Sustainable_Computing",
