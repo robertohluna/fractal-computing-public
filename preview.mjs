@@ -53,7 +53,10 @@ async function handle (req, res) {
 	}
     }
 
-    res.writeHead(404, {'Content-Type': 'text/plain'}).end(`Not in this copy of the site: ${url}`)   // eg. /working/nda: the agreements aren't included
+    if (/^\/working\/[^/]+$/.test(url))                                       // the agreements (eg. /working/nda) aren't in this copy: the live site has them
+	return res.writeHead(302, {Location: 'https://fractal-computing.com' + url}).end()
+
+    res.writeHead(404, {'Content-Type': 'text/plain'}).end(`Not in this copy of the site: ${url}`)
 }
 
 http.createServer((req, res) => handle(req, res).catch(e => {

@@ -1545,17 +1545,7 @@ main section[tabindex="-1"]:focus{outline:none}
    ====================================================================== */
 /* grids never end on an empty cell */
 .stats,.steps,.pillars,.sectors,.ex-panels{padding:1px 1px 0 1px}            /* the right-hand hairline is no longer clipped */
-@media screen and (min-width:761px){ .steps:has(> li:nth-child(5):last-child) > li:last-child{grid-column:span 2} }
-/* phones: the wide animated diagrams (How It Works, Collaborate) are drawn 1000 units across and would shrink to
-   type a few pixels high. The steps, tables and lists beside each one carry the same content, so on phones they
-   stand alone, without the highlight that follows the diagram's animation. */
-@media screen and (max-width:560px){
-  .diagram{display:none}
-  .steps li.active{background:var(--surface)}
-  .steps li.active .n{background:none;border-color:var(--rule-2);color:var(--ink-2)}
-  .poc-list li.active{border-color:transparent;background:none}
-  .steps li[data-step],.poc-list li{cursor:auto}
-}   /* phones have one column: spanning two would force a second and push steps off the screen */
+@media screen and (min-width:761px){ .steps:has(> li:nth-child(5):last-child) > li:last-child{grid-column:span 2} }   /* phones have one column: spanning two would force a second and push steps off the screen */
 .cat-grid > :last-child:nth-child(odd){grid-column:1 / -1}
 @media screen and (min-width:761px) and (max-width:1060px){
   .stats.five{grid-template-columns:repeat(6,minmax(0,1fr))}

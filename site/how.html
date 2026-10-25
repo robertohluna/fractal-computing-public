@@ -13,7 +13,7 @@
     <a href="#fast">Speed and reliability</a>
     <a href="#tokens">Token economics</a>
     <a href="#start">Getting started</a>
-    <a class="companion" href="/">The business case →</a>
+    <a class="companion" href="/why">The business case →</a>
   </nav>
 
 
@@ -57,7 +57,7 @@
     </div>
   </div>
   <p class="why"><b>The model never touches the data directly.</b> It sees the user's request, the App it wrote, and the App's results. It does not read millions of records, and it never has credentials to the systems of record.</p>
-  <p class="xref"><span class="xl">Business case</span> <a href="/#problem">Your data stays yours →</a></p>
+  <p class="xref"><span class="xl">Business case</span> <a href="/why#twin">Your data stays yours →</a></p>
   </div>
 </section>
 
@@ -73,7 +73,7 @@
     <li><b>Distributed storage</b><span>Each Fractal instance holds a discrete shard of the twin in its own multi-model database (relational, document, time-series, graph, vector). The data is spread across the mesh, not concentrated in one database server.</span></li>
     <li><b>Distributed computing</b><span>A MapReduce-style middleware runs the App on all instances at once and combines their results. Instances coordinate peer-to-peer over HTTPS, with no central broker and no single point of failure.</span></li>
   </ul>
-  <p class="xref"><span class="xl">Business case</span> <a href="/#problem">AI without risk to your systems →</a> <a href="/#stage-2">Hot backup at a tenth of the cost →</a></p>
+  <p class="xref"><span class="xl">Business case</span> <a href="/why#problem">AI without risk to your systems →</a> <a href="/#stage-2">Hot backup at a tenth of the cost →</a></p>
 </section>
 
 <!-- ============ SPEED AND RELIABILITY: deterministic AI, then locality of reference ============ -->
@@ -268,7 +268,7 @@
   </table>
   </div>
   <p class="why"><b>Order of magnitude:</b> the reference billing deployment holds 3.6 trillion input records. Even at a few tokens per record, reading that data would cost trillions of tokens. Writing a Fractal App and summarizing its results takes thousands. The language model becomes a small, fixed cost per question, and the data processing runs on about $20K of hardware.</p>
-  <p class="xref"><span class="xl">Business case</span> <a href="/#problem">AI token costs become immaterial →</a></p>
+  <p class="xref"><span class="xl">Business case</span> <a href="/why#b-tokens">AI token costs become immaterial →</a></p>
 </section>
 
 <!-- ============ START ============ -->
@@ -358,7 +358,7 @@
     <p>Fractal changes where the model sits. <strong>AI is used only at the beginning and the end of the workflow.</strong> At the beginning, the model turns the user's request into a <strong>Fractal App</strong>: a small, bounded program. At the end, it turns the App's results into an executive summary. <strong>Fractal is the distributed computing and storage layer in between.</strong> It holds a continuously synchronized digital twin of the systems of record, runs the Application in parallel on every Fractal instance, and returns the results.</p>
     <p>The outcome is AI with the flexibility of a language model and the <strong>deterministic behavior of enterprise software</strong>. The systems of record cannot be corrupted, performance improves by orders of magnitude on inexpensive hardware, and language-model token costs become immaterial.</p>
   </div>
-  <p class="xref"><span class="xl">Business case</span> <a href="/#problem">The decision, in business terms →</a></p>
+  <p class="xref"><span class="xl">Business case</span> <a href="/why">The decision, in business terms →</a></p>
 </div>
 </section>
 
